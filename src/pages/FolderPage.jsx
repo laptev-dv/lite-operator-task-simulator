@@ -106,7 +106,7 @@ function FolderPage() {
   const handleDelete = async () => {
     try {
       await folderApi.delete(id);
-      navigate('/library');
+      navigate('/lite-operator-task-simulator/library');
     } catch (err) {
       setError(err.message);
     } finally {

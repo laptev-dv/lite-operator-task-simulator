@@ -110,7 +110,7 @@ function LibraryPage() {
       const response = await folderApi.create({ name });
       const newFolder = response.data;
       setFolders([...folders, newFolder]);
-      navigate(`/folder/${newFolder.id}`);
+      navigate(`/lite-operator-task-simulator/folder/${newFolder.id}`);
     } catch (error) {
       console.error("Ошибка создания папки:", error);
     } finally {

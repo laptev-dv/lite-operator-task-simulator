@@ -165,7 +165,7 @@ function ExperimentPage() {
   };
 
   const handleStartExperiment = () => {
-    navigate(`/experiment/${id}/run`, { state: { experiment } });
+    navigate(`/lite-operator-task-simulator/experiment/${id}/run`, { state: { experiment } });
   };
 
   const handleSaveChanges = async () => {
@@ -190,7 +190,7 @@ function ExperimentPage() {
   };
 
   const handleViewAllSessions = () => {
-    navigate(`/experiment/${id}/sessions`);
+    navigate(`/lite-operator-task-simulator/experiment/${id}/sessions`);
   };
 
   if (!experiment && experimentLoading) {
