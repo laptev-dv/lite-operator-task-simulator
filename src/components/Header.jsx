@@ -37,7 +37,7 @@ function Header() {
             <Button 
               color="inherit" 
               component={RouterLink} 
-              to="/library"
+              to="/lite-operator-task-simulator/library"
               startIcon={<LibraryBooksIcon />}
             >
               Исследования
@@ -45,7 +45,7 @@ function Header() {
             <Button 
               color="inherit" 
               component={RouterLink} 
-              to="/profile"
+              to="/lite-operator-task-simulator/profile"
               startIcon={<PersonIcon />}
             >
               Подсказка
@@ -78,7 +78,7 @@ function Header() {
             >
               <MenuItem 
                 component={RouterLink} 
-                to="/library"
+                to="/lite-operator-task-simulator/library"
                 onClick={handleClose}
               >
                 <LibraryBooksIcon sx={{ mr: 1 }} />
@@ -86,7 +86,7 @@ function Header() {
               </MenuItem>
               <MenuItem 
                 component={RouterLink} 
-                to="/profile"
+                to="/lite-operator-task-simulator/profile"
                 onClick={handleClose}
               >
                 <PersonIcon sx={{ mr: 1 }} />

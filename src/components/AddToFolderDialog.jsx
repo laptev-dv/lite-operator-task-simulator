@@ -87,7 +87,7 @@ function AddToFolderDialog({
           </Typography>
           <Button
             component={Link}
-            to="/experiment/create"
+            to="/lite-operator-task-simulator/experiment/create"
             state={{ fromFolder: folderId }}
             variant="contained"
             startIcon={<AddIcon />}
