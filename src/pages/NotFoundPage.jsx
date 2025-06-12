@@ -32,7 +32,7 @@ function NotFoundPage() {
       <Button
         variant="contained"
         component={Link}
-        to="/"
+        to="/lite-operator-task-simulator/"
         sx={{ mt: 2 }}
       >
         Вернуться на главную

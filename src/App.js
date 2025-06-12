@@ -35,7 +35,7 @@ function App() {
         </Route>
 
         {/* Страница 404 */}
-        <Route path="lite-operator-task-simulator/*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
