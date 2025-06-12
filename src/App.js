@@ -14,7 +14,7 @@ import ExperimentRunPage from "./pages/ExperimentRunPage";
 function App() {
   return (
     <>
-      <Routes>
+      <Routes basename={process.env.PUBLIC_URL}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<LibraryPage />} />
           <Route path="library" element={<LibraryPage />} />
