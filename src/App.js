@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       <Routes basename={process.env.PUBLIC_URL}>
-        <Route path="/" element={<MainLayout />}>
+        <Route path="lite-operator-task-simulator/" element={<MainLayout />}>
           <Route index element={<LibraryPage />} />
           <Route path="library" element={<LibraryPage />} />
           <Route path="profile" element={<ProfilePage />} />
@@ -30,12 +30,12 @@ function App() {
           <Route path="session/:id" element={<SessionDetailPage />} />
         </Route>
 
-        <Route path="/experiment/:id/run" element={<ExperimentLayout />}>
+        <Route path="lite-operator-task-simulator/experiment/:id/run" element={<ExperimentLayout />}>
           <Route index element={<ExperimentRunPage />} />
         </Route>
 
         {/* Страница 404 */}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="lite-operator-task-simulator/*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
