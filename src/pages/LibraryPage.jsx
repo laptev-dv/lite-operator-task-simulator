@@ -138,7 +138,7 @@ function LibraryPage() {
             alignItems="center"
           >
             <Typography variant="h6" sx={{ fontWeight: 500 }}>
-              Библиотека
+              Исследования
             </Typography>
 
             <Stack direction="row" spacing={1}>

@@ -40,7 +40,7 @@ function Header() {
               to="/library"
               startIcon={<LibraryBooksIcon />}
             >
-              Библиотека
+              Исследования
             </Button>
             <Button 
               color="inherit" 
@@ -82,7 +82,7 @@ function Header() {
                 onClick={handleClose}
               >
                 <LibraryBooksIcon sx={{ mr: 1 }} />
-                Библиотека
+                Исследования
               </MenuItem>
               <MenuItem 
                 component={RouterLink} 

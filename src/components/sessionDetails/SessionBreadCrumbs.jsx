@@ -13,7 +13,7 @@ const SessionBreadCrumbs = ({ experimentId, lastName = "Сессия" }) => (
         "&:hover": { textDecoration: "underline" },
       }}
     >
-      Библиотека
+      Исследования
     </Link>
 
     <Link

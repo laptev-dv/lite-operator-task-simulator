@@ -13,7 +13,7 @@ const ExperimentBreadcrumbs = ({ folderId, lastName = "Эксперимент" }
         "&:hover": { textDecoration: "underline" },
       }}
     >
-      Библиотека
+      Исследования
     </Link>
 
     {folderId && (
