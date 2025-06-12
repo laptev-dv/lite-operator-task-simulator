@@ -1,4 +1,5 @@
 import { STORAGE_KEYS, storage, calculateEfficiency } from './storage';
+import { v4 as uuid } from 'uuid';
 
 export const experimentApi = {
   getAll: async ({ search = '', sortBy = 'createdAt' }) => {
@@ -59,8 +60,14 @@ export const experimentApi = {
   },
 
   create: async (experimentData) => {
+    const tasks = experimentData.tasks.map( task => ({
+      ...task,
+      id: uuid()
+    }))
+
     const newExperiment = {
       ...experimentData,
+      tasks,
       createdAt: new Date().toISOString(),
       sessionsCount: 0
     };

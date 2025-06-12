@@ -310,7 +310,7 @@ function ExperimentPage() {
                   {sessions.slice(0, 3).map((session, index) => (
                     <Box key={session.id}>
                       <Link
-                        to={`/session/${session.id}`}
+                        to={`/lite-operator-task-simulator/session/${session.id}`}
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
                         <SessionItem

@@ -265,7 +265,7 @@ function FolderPage() {
               {folder.experiments.map((experiment, index) => (
                 <Box key={experiment.id}>
                   <Link
-                    to={`/experiment/${experiment.id}`}
+                    to={`/lite-operator-task-simulator/experiment/${experiment.id}`}
                     state={{ fromFolder: folder.id }}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >

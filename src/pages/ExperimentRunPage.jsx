@@ -169,7 +169,14 @@ const ExperimentRunPage = () => {
 
   // Сохранение статистики по выполнению задачи
   const saveTaskExecution = useCallback(() => {
+    const rightAnswers = presentationResults.filter(presentation => 
+      presentation.correctAnswer.row == presentation.userAnswer?.row 
+      && presentation.correctAnswer.column == presentation.userAnswer?.column
+    )
+    const efficiency = parseFloat(rightAnswers.length) / parseFloat(presentationResults.length) * 100
+
     const taskExecution = {
+      efficiency,
       taskId: currentTask.id,
       presentations: [...presentationResults],
     };
@@ -208,7 +215,7 @@ const ExperimentRunPage = () => {
     }
   }, [id, taskResults, navigate, saveTaskExecution]);
 
-  // Определение следующей задачи (для адаптивного режима)
+  // Определение следующей задачи
   const getNextTaskIndex = useCallback(
     (currentIndex, efficiency) => {
       if (shouldCompleteAfterCurrentTask) {

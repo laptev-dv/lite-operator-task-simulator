@@ -1,99 +1,177 @@
-import { STORAGE_KEYS, storage, calculateEfficiency } from './storage';
+import { STORAGE_KEYS, storage } from './storage';
+import { calculateDetailedStats } from './sessionUtils'; // Вынесем сложную логику в отдельный файл
+import { v4 as uuid } from 'uuid';
 
 export const sessionApi = {
+  // Создание новой сессии
   create: async (sessionData) => {
-    const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, sessionData.experimentId);
-    if (!experiment) throw new Error('Experiment not found');
-    
-    const newSession = {
-      ...sessionData,
-      id: undefined, // Будет сгенерирован в storage.add
-      date: new Date().toISOString(),
-      results: []
-    };
-    
-    // Создаем сессию
-    const createdSession = storage.add(STORAGE_KEYS.SESSIONS, newSession);
-    
-    // Обновляем счетчик сессий в эксперименте
-    storage.update(STORAGE_KEYS.EXPERIMENTS, experiment.id, {
-      sessionsCount: (experiment.sessionsCount || 0) + 1
-    });
-    
-    return { data: createdSession };
-  },
+    try {
+      const { experimentId, results, userId } = sessionData;
+      
+      // Проверяем существование эксперимента
+      const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, experimentId);
+      if (!experiment) {
+        throw { status: 404, message: 'Эксперимент не найден' };
+      }
 
-  getByExperiment: async (experimentId) => {
-    const sessions = storage.findWhere(
-      STORAGE_KEYS.SESSIONS,
-      s => s.experimentId === experimentId
-    );
-    
-    return { 
-      data: sessions.map(session => ({
-        ...session,
-        isMine: true // Здесь можно добавить реальную проверку владельца
-      }))
-    };
-  },
+      // Проверяем задачи
+      const taskIds = experiment.tasks.map(task => task.id);
+      const invalidTasks = results.filter(r => !taskIds.includes(r.taskId));
+      
+      if (invalidTasks.length > 0) {
+        throw { status: 400, message: 'Некоторые задачи не найдены в эксперименте' };
+      }
 
-  delete: async (sessionId) => {
-    const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
-    if (!session) throw new Error('Session not found');
-    
-    // Уменьшаем счетчик сессий в эксперименте
-    const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experimentId);
-    if (experiment) {
-      storage.update(STORAGE_KEYS.EXPERIMENTS, experiment.id, {
-        sessionsCount: Math.max(0, (experiment.sessionsCount || 0) - 1)
+      const filledResults = results.map(result => ({
+          id: uuid(),
+          taskId: result.taskId,
+          presentations: result.presentations.map(p => ({
+            correctAnswer: p.correctAnswer,
+            userAnswer: p.userAnswer,
+            responseTime: p.responseTime || 0,
+            timestamp: p.timestamp || new Date().toISOString()
+          }))
+        }))
+
+      // Создаем новую сессию
+      const newSession = {
+        experiment: experimentId,
+        user: userId,
+        createdAt: new Date().toISOString(),
+        results: filledResults
+      };
+
+      // Сохраняем сессию
+      const savedSession = storage.add(STORAGE_KEYS.SESSIONS, newSession);
+      
+      // Обновляем эксперимент (добавляем ссылку на сессию)
+      storage.update(STORAGE_KEYS.EXPERIMENTS, experimentId, {
+        sessions: [...(experiment.sessions || []), savedSession.id]
       });
+
+      return { data: savedSession };
+
+    } catch (error) {
+      throw error.response?.data || error;
     }
-    
-    return storage.remove(STORAGE_KEYS.SESSIONS, sessionId);
   },
 
-  getById: async (sessionId) => {
-    const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
-    if (!session) throw new Error('Session not found');
-    
-    return { 
-      data: {
-        ...session,
-        efficiency: calculateEfficiency(session.results)
+  // Получение сессий эксперимента
+  getByExperiment: async (experimentId, userId) => {
+    try {
+      const sessions = storage.findWhere(
+        STORAGE_KEYS.SESSIONS,
+        s => s.experiment === experimentId
+      );
+
+      // Получаем данные пользователей (имитация populate)
+      const users = storage.getAll(STORAGE_KEYS.USERS);
+      
+      return {
+        data: sessions.map(session => ({
+          ...session,
+          user: users.find(u => u.id === session.user) || { id: session.user, username: 'Unknown' },
+          isMine: session.user === userId
+        }))
+      };
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  // Получение сессии по ID
+  getById: async (sessionId, userId) => {
+    try {
+      const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
+      if (!session) {
+        throw { status: 404, message: 'Сессия не найдена' };
       }
-    };
-  },
 
-  updateResults: async (sessionId, results) => {
-    const updated = storage.update(STORAGE_KEYS.SESSIONS, sessionId, {
-      results,
-      duration: calculateDuration(results) // Можно добавить вычисление длительности
-    });
-    
-    if (!updated) throw new Error('Session not found');
-    return { data: updated };
-  },
+      // Получаем связанные данные (имитация populate)
+      const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experiment);
+      const user = storage.findById(STORAGE_KEYS.USERS, session.user);
 
-  exportToPDF: async (sessionId) => {
-    const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
-    if (!session) throw new Error('Session not found');
-    
-    // В реальном приложении здесь должна быть генерация PDF
-    console.log('Exporting to PDF:', session);
-    return { 
-      data: {
-        success: true,
-        sessionId,
-        url: `data:application/pdf;base64,${btoa(JSON.stringify(session))}` // Заглушка
+      // Проверка прав доступа
+      if (session.user !== userId && experiment?.author !== userId) {
+        throw { status: 403, message: 'Нет прав на просмотр этой сессии' };
       }
-    };
+
+      // Добавляем данные задач к результатам
+      const resultsWithTasks = session.results.map(result => ({
+        ...result,
+        task: experiment.tasks.find(t => t.id === result.taskId) || null
+      }));
+
+      // Рассчитываем статистику
+      const detailedResults = calculateDetailedStats(resultsWithTasks);
+
+      return {
+        data: {
+          ...session,
+          experiment,
+          user,
+          results: detailedResults,
+          isMine: session.user === userId
+        }
+      };
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  // Удаление сессии
+  delete: async (sessionId, userId) => {
+    try {
+      const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
+      if (!session) {
+        throw { status: 404, message: 'Сессия не найдена' };
+      }
+
+      const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experiment);
+      
+      // Проверка прав
+      const isOwner = session.user === userId;
+      const isExperimentAuthor = experiment?.author === userId;
+      
+      if (!isOwner && !isExperimentAuthor) {
+        throw { status: 403, message: 'Нет прав на удаление сессии' };
+      }
+
+      // Удаляем сессию
+      storage.remove(STORAGE_KEYS.SESSIONS, sessionId);
+      
+      // Удаляем ссылку из эксперимента
+      if (experiment) {
+        storage.update(STORAGE_KEYS.EXPERIMENTS, experiment.id, {
+          sessions: experiment.sessions?.filter(id => id !== sessionId) || []
+        });
+      }
+
+      return { data: { message: 'Сессия успешно удалена' } };
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  // Экспорт сессии в PDF (заглушка для клиента)
+  exportToPDF: async (sessionId, userId) => {
+    try {
+      // Получаем полные данные сессии
+      const { data: session } = await sessionApi.getById(sessionId, userId);
+      
+      // В реальном приложении здесь был бы запрос к серверу для генерации PDF
+      console.log('Generating PDF for session:', sessionId);
+      
+      // Возвращаем заглушку
+      return {
+        data: {
+          success: true,
+          sessionId,
+          url: `data:application/pdf;base64,${btoa(JSON.stringify(session))}` // Заглушка
+        }
+      };
+    } catch (error) {
+      throw error.response?.data || error;
+    }
   }
 };
-
-// Вспомогательная функция для расчета длительности
-function calculateDuration(results = []) {
-  if (!results.length) return 0;
-  return results.reduce((total, task) => {
-    return total + (task.duration || 0);
-  }, 0);
-}

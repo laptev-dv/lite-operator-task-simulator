@@ -99,7 +99,7 @@ function SessionsListPage() {
               {sessions.map((session, index) => (
                 <Box key={session.id}>
                   <RouterLink
-                    to={`/session/${session.id}`}
+                    to={`/lite-operator-task-simulator/session/${session.id}`}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <SessionItem

@@ -18,7 +18,7 @@ const SessionBreadCrumbs = ({ experimentId, lastName = "Сессия" }) => (
 
     <Link
       component={RouterLink}
-      to={`/experiment/${experimentId}`}
+      to={`/lite-operator-task-simulator/experiment/${experimentId}`}
       style={{
         textDecoration: "none",
         color: "primary",
