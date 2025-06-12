@@ -155,7 +155,7 @@ function ExperimentPage() {
   };
 
   const handleCopyClick = () => {
-    navigate("/experiment/create", {
+    navigate("/lite-operator-task-simulator/experiment/create", {
       state: {
         copiedExperiment: experiment,
         fromFolder: folderId,
@@ -181,7 +181,7 @@ function ExperimentPage() {
   const handleDeleteExperiment = async () => {
     try {
       await experimentApi.delete(id);
-      navigate("/library");
+      navigate("/lite-operator-task-simulator/library");
     } catch (err) {
       setError(err.message);
     } finally {

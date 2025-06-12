@@ -96,7 +96,7 @@ function LibraryPage() {
     if (type === "папку") {
       setFolderDialogOpen(true);
     } else if (type === "эксперимент") {
-      navigate("/experiment/create");
+      navigate("/lite-operator-task-simulator/experiment/create");
     }
   };
 
