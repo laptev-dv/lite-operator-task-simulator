@@ -10,7 +10,7 @@ import ExperimentTasks from "./ExperimentTasks";
 function ExperimentParameters({ parameters }) {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [activeTaskId, setActiveTaskId] = useState(
-    parameters.tasks[0]?._id || null
+    parameters.tasks[0]?.id || null
   );
 
   const handleFullscreenOpen = () => {
@@ -26,7 +26,7 @@ function ExperimentParameters({ parameters }) {
   };
 
   const activeTask =
-    parameters.tasks.find((task) => task._id === activeTaskId) ||
+    parameters.tasks.find((task) => task.id === activeTaskId) ||
     parameters.tasks[0];
 
   return (

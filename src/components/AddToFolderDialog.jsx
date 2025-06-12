@@ -136,10 +136,10 @@ function AddToFolderDialog({
         ) : (
           <List dense>
             {experiments.map((experiment) => (
-              <React.Fragment key={experiment._id}>
+              <React.Fragment key={experiment.id}>
                 <ListItem
                   sx={{
-                    bgcolor: localSelected.includes(experiment._id)
+                    bgcolor: localSelected.includes(experiment.id)
                       ? "action.selected"
                       : "background.paper",
                     "&:hover": {
@@ -149,17 +149,17 @@ function AddToFolderDialog({
                 >
                   <Checkbox
                     edge="start"
-                    checked={localSelected.includes(experiment._id)}
-                    onChange={() => handleToggle(experiment._id)}
+                    checked={localSelected.includes(experiment.id)}
+                    onChange={() => handleToggle(experiment.id)}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{
-                      "aria-labelledby": `checkbox-${experiment._id}`,
+                      "aria-labelledby": `checkbox-${experiment.id}`,
                     }}
                   />
 
                   <ListItemText
-                    id={`checkbox-${experiment._id}`}
+                    id={`checkbox-${experiment.id}`}
                     primary={experiment.name}
                     secondary={
                       <Stack direction='row' alignItems='center' spacing={1}>

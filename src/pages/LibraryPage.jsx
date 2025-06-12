@@ -214,10 +214,10 @@ function LibraryPage() {
             ) : hasItems ? (
               <List disablePadding>
                 {currentItems.map((item, index) => (
-                  <Box key={item._id}>
+                  <Box key={item.id}>
                     <Link
-                      to={`/${activeTab === 0 ? "experiment" : "folder"}/${
-                        item._id
+                      to={`/lite-operator-task-simulator/${activeTab === 0 ? "experiment" : "folder"}/${
+                        item.id
                       }`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >

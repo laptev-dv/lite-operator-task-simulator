@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
+    "axios": "^1.8.4",
     "date-fns": "^4.1.0",
     "react": "^19.1.0",
     "react-color": "^2.19.3",
@@ -19,8 +20,8 @@
     "react-router-dom": "^7.4.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.15.3",
-    "xlsx": "^0.18.5",
-    "axios": "^1.8.4"
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

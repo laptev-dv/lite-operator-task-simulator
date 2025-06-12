@@ -54,7 +54,7 @@ function SessionsListPage() {
   const handleDeleteSession = async (sessionId) => {
     try {
       await sessionApi.delete(sessionId);
-      setSessions(sessions.filter((s) => s._id !== sessionId));
+      setSessions(sessions.filter((s) => s.id !== sessionId));
     } catch (err) {
       setError(err.message);
     }
@@ -97,15 +97,15 @@ function SessionsListPage() {
           {sessions.length > 0 ? (
             <List disablePadding>
               {sessions.map((session, index) => (
-                <Box key={session._id}>
+                <Box key={session.id}>
                   <RouterLink
-                    to={`/session/${session._id}`}
+                    to={`/session/${session.id}`}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <SessionItem
                       session={session}
                       onDelete={() => {
-                        handleDeleteSession(session._id);
+                        handleDeleteSession(session.id);
                       }}
                       showDivider={index !== sessions.length - 1}
                       onExport={() => exportSessionToXLSX(session)}

@@ -9,14 +9,14 @@ import SessionDetailsPreview from "./SessionDetailsPreview";
 function SessionParameters({ sessionData }) {
   const { experiment, results } = sessionData;
 
-  const [activeResultId, setActiveResultId] = useState(results[0]?._id);
+  const [activeResultId, setActiveResultId] = useState(results[0]?.id);
 
   const handleTaskClick = (resultId) => {
     setActiveResultId(resultId);
   };
 
   const activeResult =
-    results.find((result) => result._id === activeResultId) || results[0];
+    results.find((result) => result.id === activeResultId) || results[0];
 
   return (
     <>

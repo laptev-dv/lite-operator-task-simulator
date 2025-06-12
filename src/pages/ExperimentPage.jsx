@@ -107,7 +107,7 @@ function ExperimentPage() {
   const handleDeleteSession = async (sessionId) => {
     try {
       await sessionApi.delete(sessionId);
-      setSessions(sessions.filter((s) => s._id !== sessionId));
+      setSessions(sessions.filter((s) => s.id !== sessionId));
     } catch (err) {
       setError(err.message);
     }
@@ -308,9 +308,9 @@ function ExperimentPage() {
               <>
                 <List disablePadding>
                   {sessions.slice(0, 3).map((session, index) => (
-                    <Box key={session._id}>
+                    <Box key={session.id}>
                       <Link
-                        to={`/session/${session._id}`}
+                        to={`/session/${session.id}`}
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
                         <SessionItem

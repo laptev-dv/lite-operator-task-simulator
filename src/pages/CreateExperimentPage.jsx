@@ -134,8 +134,8 @@ function CreateExperimentPage() {
       // Отправляем запрос на сервер
       const response = await experimentApi.create(experimentData);
 
-      if (response.data?._id) {
-        navigate(`/lite-operator-task-simulator/experiment/${response.data._id}`);
+      if (response.data?.id) {
+        navigate(`/lite-operator-task-simulator/experiment/${response.data.id}`);
       } else {
         throw new Error("Не удалось получить ID созданного эксперимента");
       }

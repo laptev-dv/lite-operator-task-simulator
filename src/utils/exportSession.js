@@ -154,5 +154,5 @@ export const exportSessionToXLSX = (sessionData) => {
   const fullDataSheet = XLSX.utils.aoa_to_sheet(buildFullDataSheet(sessionData));
   XLSX.utils.book_append_sheet(workbook, fullDataSheet, "Полные данные");
 
-  XLSX.writeFile(workbook, `Сессия_${sessionData._id}_${Date.now()}.xlsx`);
+  XLSX.writeFile(workbook, `Сессия_${sessionData.id}_${Date.now()}.xlsx`);
 };

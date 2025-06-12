@@ -57,7 +57,7 @@ function FolderPage() {
       setFolderLoading(true);
       const response = await folderApi.getById(id);
       setFolder(response.data);
-      setSelectedExperiments(response.data.experiments.map(item => item._id) || []);
+      setSelectedExperiments(response.data.experiments.map(item => item.id) || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -142,10 +142,10 @@ function FolderPage() {
   const handleRemoveExperiment = async (experimentId) => {
     try {
       const newExperimentIds = folder.experiments
-        .filter(exp => exp._id !== experimentId)
-        .map(exp => exp._id);
+        .filter(exp => exp.id !== experimentId)
+        .map(exp => exp.id);
       
-      await folderApi.setExperiments(folder._id, newExperimentIds);
+      await folderApi.setExperiments(folder.id, newExperimentIds);
       await loadFolderData(); // Перезагружаем данные после удаления
     } catch (err) {
       setError(err.message);
@@ -263,10 +263,10 @@ function FolderPage() {
           ) : folder.experiments.length > 0 ? (
             <List disablePadding>
               {folder.experiments.map((experiment, index) => (
-                <Box key={experiment._id}>
+                <Box key={experiment.id}>
                   <Link
-                    to={`/experiment/${experiment._id}`}
-                    state={{ fromFolder: folder._id }}
+                    to={`/experiment/${experiment.id}`}
+                    state={{ fromFolder: folder.id }}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <FolderExperimentItem
@@ -274,7 +274,7 @@ function FolderPage() {
                       onRemove={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        handleRemoveExperiment(experiment._id);
+                        handleRemoveExperiment(experiment.id);
                       }}
                     />
                   </Link>
@@ -309,7 +309,7 @@ function FolderPage() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         onSave={handleUpdateExperiments}
-        folderId={folder._id}
+        folderId={folder.id}
       />
 
       {/* Диалог редактирования папки */}

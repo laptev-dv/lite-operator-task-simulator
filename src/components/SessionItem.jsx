@@ -19,13 +19,13 @@ function SessionItem({ session, showDivider, onClick, onDelete, onExport }) {
   const handleExportClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    onExport(session._id);
+    onExport(session.id);
   };
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    onDelete(session._id);
+    onDelete(session.id);
   };
 
   return (

@@ -20,11 +20,11 @@ const SessionResults = ({ results, activeResultId, onTaskClick }) => {
 
       <List dense sx={{ paddingRight: 1, height: "100%", overflowY: "auto", marginBottom: 2 }}>
         {results.map((result, index) => (
-          <React.Fragment key={result._id}>
+          <React.Fragment key={result.id}>
             <SessionResultItem
               task={result.task}
-              isActive={activeResultId === result._id}
-              onClick={() => onTaskClick(result._id)}
+              isActive={activeResultId === result.id}
+              onClick={() => onTaskClick(result.id)}
               stats={{
                 success: result.successCount,
                 error: result.errorCount,

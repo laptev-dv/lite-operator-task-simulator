@@ -28,11 +28,11 @@ const ExperimentTasks = ({ tasks, activeTaskId, onTaskClick }) => {
         }}
       >
         {tasks.map((task, index) => (
-          <React.Fragment key={task._id}>
+          <React.Fragment key={task.id}>
             <TaskItem
               task={task}
-              isActive={activeTaskId === task._id}
-              onClick={() => onTaskClick(task._id)}
+              isActive={activeTaskId === task.id}
+              onClick={() => onTaskClick(task.id)}
             />
             {index < tasks.length - 1 && <Divider />}
           </React.Fragment>

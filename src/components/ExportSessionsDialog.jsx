@@ -41,14 +41,14 @@ function ExportSessionsDialog({ open, onClose, sessions }) {
     if (selectedSessions.length === sessions.length) {
       setSelectedSessions([]);
     } else {
-      setSelectedSessions(sessions.map(session => session._id));
+      setSelectedSessions(sessions.map(session => session.id));
     }
   };
 
   const handleExport = () => {
     // Экспорт выбранных сессий
     sessions
-      .filter(session => selectedSessions.includes(session._id))
+      .filter(session => selectedSessions.includes(session.id))
       .forEach(session => {
         exportSessionToXLSX(session);
       });
@@ -92,12 +92,12 @@ function ExportSessionsDialog({ open, onClose, sessions }) {
           <Divider />
 
           {sessions.map((session) => (
-            <ListItem key={session._id} disablePadding>
-              <ListItemButton onClick={() => handleToggle(session._id)}>
+            <ListItem key={session.id} disablePadding>
+              <ListItemButton onClick={() => handleToggle(session.id)}>
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={selectedSessions.indexOf(session._id) !== -1}
+                    checked={selectedSessions.indexOf(session.id) !== -1}
                     tabIndex={-1}
                     disableRipple
                   />

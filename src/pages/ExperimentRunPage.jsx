@@ -170,7 +170,7 @@ const ExperimentRunPage = () => {
   // Сохранение статистики по выполнению задачи
   const saveTaskExecution = useCallback(() => {
     const taskExecution = {
-      taskId: currentTask._id,
+      taskId: currentTask.id,
       presentations: [...presentationResults],
     };
 
@@ -197,8 +197,8 @@ const ExperimentRunPage = () => {
       // Отправка данных на сервер
       const response = await sessionApi.create(sessionData);
 
-      if (response.data?._id) {
-        navigate(`/lite-operator-task-simulator/session/${response.data._id}`);
+      if (response.data?.id) {
+        navigate(`/lite-operator-task-simulator/session/${response.data.id}`);
       } else {
         throw new Error("Не удалось получить ID созданной сессии");
       }

@@ -34,7 +34,7 @@ function SessionDetailPage() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Сессия_${sessionData._id}.pdf`);
+      link.setAttribute('download', `Сессия_${sessionData.id}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
@@ -181,7 +181,7 @@ function SessionDetailPage() {
         pb: 0,
       }}
     >
-      <SessionBreadCrumbs experimentId={sessionData.experiment._id} />
+      <SessionBreadCrumbs experimentId={sessionData.experiment.id} />
 
       <SessionInfo
         sessionData={{
