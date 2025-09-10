@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Paper, List, Divider } from "@mui/material";
-import TaskItem from "./TaskItem";
+import TaskItem from "../shared/TaskItem";
 
 const ExperimentTasks = ({ tasks, activeTaskId, onTaskClick }) => {
   return (
@@ -30,6 +30,7 @@ const ExperimentTasks = ({ tasks, activeTaskId, onTaskClick }) => {
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <TaskItem
+              static
               task={task}
               isActive={activeTaskId === task.id}
               onClick={() => onTaskClick(task.id)}

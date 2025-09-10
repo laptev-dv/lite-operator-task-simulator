@@ -24,7 +24,6 @@ import {
 import {
   Edit as EditIcon,
   MoreVert as MoreVertIcon,
-  Info as InfoIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as BackIcon,
   Delete as DeleteIcon,
@@ -66,6 +65,7 @@ function ExperimentPage() {
       try {
         setExperimentLoading(true);
         const response = await experimentApi.getById(id);
+        console.log(response.data)
         setExperiment(response.data);
         setEditedName(response.data.name);
 
@@ -130,10 +130,6 @@ function ExperimentPage() {
         document.head.appendChild(link);
       }
     });
-  };
-
-  const handleOpenInstructions = () => {
-    window.open("/experiment-guide.pdf", "_blank");
   };
 
   const handleMenuOpen = (event) => {
@@ -385,14 +381,6 @@ function ExperimentPage() {
                 disabled={experimentLoading}
               >
                 Начать эксперимент
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<InfoIcon />}
-                onClick={handleOpenInstructions}
-                disabled={experimentLoading}
-              >
-                Инструкция
               </Button>
             </Stack>
           </Toolbar>

@@ -5,7 +5,7 @@ import axios from 'axios';
 const CACHE_KEY = 'google-fonts-cache';
 const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 часа
 
-const FontSelect = ({ value, onChange }) => {
+const FontSelect = ({ value, onChange, disabled = false }) => {
   const [fonts, setFonts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -81,6 +81,7 @@ const FontSelect = ({ value, onChange }) => {
           label="Шрифт"
           variant='outlined'
           fullWidth
+          disabled={disabled}
           InputProps={{
             ...params.InputProps,
             endAdornment: (

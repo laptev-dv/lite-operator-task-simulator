@@ -55,7 +55,7 @@ const allSymbols = symbolGroups.flatMap(group =>
   }))
 );
 
-const AsciiSymbolSelect = ({ value, onChange, fontFamily }) => {
+const AsciiSymbolSelect = ({ value, onChange, fontFamily, disabled=false }) => {
   return (
     <Autocomplete
       fullWidth
@@ -74,6 +74,7 @@ const AsciiSymbolSelect = ({ value, onChange, fontFamily }) => {
           label="Символ"
           variant="outlined"
           fullWidth
+          disabled={disabled}
           InputProps={{
             ...params.InputProps,
             style: { 

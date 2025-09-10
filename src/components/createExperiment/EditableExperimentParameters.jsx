@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import EditableSeriesSettings from "./EditableSeriesSettings";
+import SeriesSettings from "../shared/SeriesSettings";
 import EditableExperimentTasks from "./EditableExperimentTasks";
-import EditableExperimentGeneralParams from "./EditableExperimentGeneralParams";
+import ExperimentGeneralParams from "../shared/ExperimentGeneralParams";
 import ExperimentPreview from "../shared/ExperimentPreview";
-import EditableTimeParameters from "./EditableTimeParameters";
+import TimeParameters from "../shared/TimeParameters";
 
 function EditableExperimentParameters({
   tasks,
@@ -99,7 +99,7 @@ function EditableExperimentParameters({
           maxWidth: 800,
         }}
       >
-        <EditableSeriesSettings
+        <SeriesSettings
           parameters={experiment}
           onParamChange={handleExperimentParamChange}
           tasksCount={tasks.length}
@@ -138,7 +138,7 @@ function EditableExperimentParameters({
               height: "100%",
             }}
           >
-            <EditableTimeParameters
+            <TimeParameters
               parameters={{
                 stimulusTime: activeTask.stimulusTime,
                 responseTime: activeTask.responseTime,
@@ -147,7 +147,7 @@ function EditableExperimentParameters({
               onParamChange={handleTaskParamChange}
             />
 
-            <EditableExperimentGeneralParams
+            <ExperimentGeneralParams
               parameters={activeTask}
               onParamChange={handleTaskParamChange}
             />

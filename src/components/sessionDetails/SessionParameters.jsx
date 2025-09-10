@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Stack } from "@mui/material";
-import TimeParameters from "../experimentDetails/TimeParameters";
-import ExperimentGeneralParams from "../experimentDetails/ExperimentGeneralParams";
+import TimeParameters from "../shared/TimeParameters";
+import ExperimentGeneralParams from "../shared/ExperimentGeneralParams";
 import SeriesSettings from "../experimentDetails/SeriesSettings";
 import SessionResults from "./SessionResults";
 import SessionDetailsPreview from "./SessionDetailsPreview";
@@ -83,6 +83,8 @@ function SessionParameters({ sessionData }) {
                   ...activeResult.task,
                   ...activeResult,
                 }}
+                static
+                onParamChange={()=>{}}
               />
             </Box>
           </Box>

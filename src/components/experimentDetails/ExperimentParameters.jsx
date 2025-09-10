@@ -1,25 +1,15 @@
 import React, { useState } from "react";
 import { Box, Stack } from "@mui/material";
 import ExperimentPreview from "../shared/ExperimentPreview";
-import TimeParameters from "./TimeParameters";
-import FullscreenPreview from "./FullscreenPreview";
-import ExperimentGeneralParams from "./ExperimentGeneralParams";
-import SeriesSettings from "./SeriesSettings";
+import TimeParameters from "../shared/TimeParameters";
+import ExperimentGeneralParams from "../shared/ExperimentGeneralParams";
+import SeriesSettings from "../shared/SeriesSettings";
 import ExperimentTasks from "./ExperimentTasks";
 
 function ExperimentParameters({ parameters }) {
-  const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [activeTaskId, setActiveTaskId] = useState(
     parameters.tasks[0]?.id || null
   );
-
-  const handleFullscreenOpen = () => {
-    setFullscreenOpen(true);
-  };
-
-  const handleFullscreenClose = () => {
-    setFullscreenOpen(false);
-  };
 
   const handleTaskClick = (taskId) => {
     setActiveTaskId(taskId);
@@ -31,12 +21,6 @@ function ExperimentParameters({ parameters }) {
 
   return (
     <>
-      <FullscreenPreview
-        open={fullscreenOpen}
-        onClose={handleFullscreenClose}
-        parameters={activeTask}
-      />
-
       <Stack direction="row" gap={2}>
         <Stack
           direction="column"
@@ -48,13 +32,10 @@ function ExperimentParameters({ parameters }) {
         >
           {/* Блок серии и режима работы */}
           <SeriesSettings
+            static
             parameters={{
-              mode: parameters.mode,
-              initialTaskNumber: parameters.initialTaskNumber,
-              presentationsPerTask: parameters.presentationsPerTask,
-              seriesTime: parameters.seriesTime,
-              efficiencyMin: parameters.efficiencyMin,
-              efficiencyMax: parameters.efficiencyMax,
+              ...parameters,
+              experimentName: parameters.name
             }}
           />
 
@@ -92,10 +73,15 @@ function ExperimentParameters({ parameters }) {
                   responseTime: activeTask.responseTime,
                   pauseTime: activeTask.pauseTime,
                 }}
+                static
               />
 
               {/* Основные параметры эксперимента */}
-              <ExperimentGeneralParams parameters={activeTask} />
+              <ExperimentGeneralParams 
+                static
+                parameters={activeTask} 
+                onParamChange={()=>{}}
+              />
             </Box>
           </Box>
         </Stack>
@@ -110,10 +96,7 @@ function ExperimentParameters({ parameters }) {
             height: "calc(100vh - 16px - 80px)",
           }}
         >
-          <ExperimentPreview
-            parameters={activeTask}
-            onFullscreen={handleFullscreenOpen}
-          />
+          <ExperimentPreview parameters={activeTask} />
         </Box>
       </Stack>
     </>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
-  TextField,
   AppBar,
   Toolbar,
   Typography,
@@ -22,8 +21,20 @@ function CreateExperimentPage() {
 
   const navigate = useNavigate();
 
+  // Функция для генерации дефолтного названия
+  const getDefaultExperimentName = () => {
+    const now = new Date();
+    const date = now.toLocaleDateString('ru-RU');
+    const time = now.toLocaleTimeString('ru-RU', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+    return `Эксперимент (${date} ${time})`;
+  };
+
   const [experiment, setExperiment] = useState({
-    experimentName: "",
+    experimentName: getDefaultExperimentName(),
     mode: "adaptive",
     presentationsPerTask: 20,
     seriesTime: 30,
@@ -102,7 +113,7 @@ function CreateExperimentPage() {
         name:
           experiment.experimentName.length > 0
             ? experiment.experimentName
-            : `Новый эксперимент`,
+            : getDefaultExperimentName(),
         mode: experiment.mode,
         presentationsPerTask: experiment.presentationsPerTask,
         tasks: tasks.map((task) => ({
@@ -115,8 +126,8 @@ function CreateExperimentPage() {
           symbolFont: task.symbolFont,
           symbolHeight: task.symbolHeight,
           symbolWidth: task.symbolWidth,
-          verticalSpacing: task.verticalPadding,
-          horizontalSpacing: task.horizontalPadding,
+          verticalPadding: task.verticalPadding,
+          horizontalPadding: task.horizontalPadding,
           stimulusTime: task.stimulusTime,
           responseTime: task.responseTime,
           pauseTime: task.pauseTime,
@@ -162,28 +173,6 @@ function CreateExperimentPage() {
       }}
     >
       <ExperimentBreadcrumbs folderId={folderId} lastName="Новый эксперимент" />
-
-      <TextField
-        fullWidth
-        label="Название эксперимента"
-        variant="outlined"
-        value={experiment.experimentName}
-        onChange={(event) =>
-          setExperiment({
-            ...experiment,
-            experimentName: event.target.value,
-          })
-        }
-        sx={{
-          mb: 2,
-        }}
-        inputProps={{
-          style: {
-            fontSize: "1.2rem",
-            padding: "12px 14px",
-          },
-        }}
-      />
 
       <EditableExperimentParameters
         tasks={tasks}

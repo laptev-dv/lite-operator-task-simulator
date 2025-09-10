@@ -11,16 +11,15 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import ColorPickerButton from "../ColorPickerButton";
+import ColorPickerButton from "./ColorPickerButton";
 import FontSelect from "./FontSelect";
 import AsciiSymbolSelect from "./AsciiSymbolSelect";
 import Link from "@mui/icons-material/Link";
 import LinkOff from "@mui/icons-material/LinkOff";
 
-const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
+const ExperimentGeneralParams = ({ parameters, onParamChange, static: isStatic = false }) => {
   const [aspectRatio, setAspectRatio] = useState(1);
-
-  const aspectRatioLocked = parameters.aspectRatioLocked
+  const aspectRatioLocked = parameters.aspectRatioLocked;
 
   // Обновляем натуральные размеры при изменении шрифта или символа
   useEffect(() => {
@@ -37,14 +36,13 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
     const height = temp.offsetHeight;
     document.body.removeChild(temp);
 
-
     // Пересчитываем соотношение сторон
     const newAspectRatio = width / height;
     setAspectRatio(newAspectRatio);
 
     let newParams = {
       symbolHeight: Math.round(parameters.symbolWidth / newAspectRatio),
-    }
+    };
 
     // Автоматически включаем блокировку при изменении шрифта/символа
     if (!aspectRatioLocked) {
@@ -53,7 +51,7 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
     
     // Обновляем высоту в соответствии с новой пропорцией
     onParamChange(newParams);
-  }, [parameters.symbolFont, parameters.symbolType]);
+  }, [parameters.symbolFont, parameters.symbolType, isStatic]);
 
   // Обработчик изменений параметров
   const handleParamChange = (field, value) => {
@@ -86,34 +84,50 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
   };
 
   const renderColorRow = (field1, color1, field2, color2) => (
-    <TableRow>
-      <TableCell>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <TextField
-            label="Фон"
-            size="small"
-            value={color1.toUpperCase()}
-            onChange={(e) => onParamChange({ [field1]: e.target.value })}
-            sx={{ flex: 1 }}
-          />
-          <ColorPickerButton
-            color={color1}
-            onChange={(newColor) => onParamChange({ [field1]: newColor })}
-          />
-          <TextField
-            label="Символ"
-            size="small"
-            value={color2.toUpperCase()}
-            onChange={(e) => onParamChange({ [field2]: e.target.value })}
-            sx={{ flex: 1 }}
-          />
-          <ColorPickerButton
-            color={color2}
-            onChange={(newColor) => onParamChange({ [field2]: newColor })}
-          />
-        </Stack>
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow>
+        <TableCell>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <TextField
+              label="Фон"
+              size="small"
+              value={color1.toUpperCase()}
+              onChange={(e) => {
+                onParamChange({ [field1]: e.target.value });
+              }}
+              sx={{ flex: 1 }}
+              disabled={isStatic}
+            />
+            <ColorPickerButton
+              color={color1}
+              onChange={(newColor) => { onParamChange({ [field1]: newColor })}}
+              disabled={isStatic}
+            />
+          </Stack>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <TextField
+              label="Символ"
+              size="small"
+              value={color2.toUpperCase()}
+              onChange={(e) => {
+                onParamChange({ [field2]: e.target.value });
+              }}
+              sx={{ flex: 1 }}
+              disabled={isStatic}
+            />
+            <ColorPickerButton
+              color={color2}
+              onChange={(newColor) => {onParamChange({ [field2]: newColor })}}
+              disabled={isStatic}
+            />
+          </Stack>
+        </TableCell>
+      </TableRow>
+    </>
   );
 
   const renderDualNumberRow = (
@@ -144,8 +158,12 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
               if (max1 !== null) val = Math.min(max1, val);
               handleParamChange(field1, val);
             }}
-            inputProps={{ min: min1, max: max1 }}
+            inputProps={{ 
+              min: min1, 
+              max: max1,
+            }}
             sx={{ flex: 1 }}
+            disabled={isStatic}
           />
           {extraContent}
           <TextField
@@ -159,8 +177,12 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
               if (max2 !== null) val = Math.min(max2, val);
               handleParamChange(field2, val);
             }}
-            inputProps={{ min: min2, max: max2 }}
+            inputProps={{ 
+              min: min2, 
+              max: max2,
+            }}
             sx={{ flex: 1 }}
+            disabled={isStatic}
           />
         </Stack>
       </TableCell>
@@ -229,14 +251,18 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
               <Stack direction="row" spacing={2}>
                 <AsciiSymbolSelect
                   value={parameters.symbolType}
-                  onChange={(newSymbol) =>
-                    onParamChange({ symbolType: newSymbol })
-                  }
+                  onChange={(newSymbol) => {
+                    onParamChange({ symbolType: newSymbol });
+                  }}
                   fontFamily={parameters.symbolFont}
+                  disabled={isStatic}
                 />
                 <FontSelect
                   value={parameters.symbolFont}
-                  onChange={(newFont) => onParamChange({ symbolFont: newFont })}
+                  onChange={(newFont) => {
+                    onParamChange({ symbolFont: newFont });
+                  }}
+                  disabled={isStatic}
                 />
               </Stack>
             </TableCell>
@@ -254,23 +280,25 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
             null,
             1,
             null,
-            <IconButton
-              onClick={toggleAspectRatioLock}
-              color={aspectRatioLocked ? "primary" : "default"}
-              sx={{ ml: 1 }}
-              size="medium"
-            >
-              <Tooltip
-                title={
-                  aspectRatioLocked
-                    ? "Сохранять пропорции"
-                    : "Не сохранять пропорции"
-                }
-                arrow
+            isStatic ? null :
+              <IconButton
+                onClick={toggleAspectRatioLock}
+                color={aspectRatioLocked ? "primary" : "default"}
+                sx={{ ml: 1 }}
+                size="medium"
+                disabled={isStatic}
               >
-                {aspectRatioLocked ? <Link /> : <LinkOff />}
-              </Tooltip>
-            </IconButton>
+                <Tooltip
+                  title={
+                    aspectRatioLocked
+                      ? "Сохранять пропорции"
+                      : "Не сохранять пропорции"
+                  }
+                  arrow
+                >
+                  {aspectRatioLocked ? <Link /> : <LinkOff />}
+                </Tooltip>
+              </IconButton>
           )}
         </TableBody>
       </Table>
@@ -278,4 +306,4 @@ const EditableExperimentGeneralParams = ({ parameters, onParamChange }) => {
   );
 };
 
-export default EditableExperimentGeneralParams;
+export default ExperimentGeneralParams;

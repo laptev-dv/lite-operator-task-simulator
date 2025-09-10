@@ -14,7 +14,7 @@ import {
   sortableKeyboardCoordinates,
   arrayMove,
 } from "@dnd-kit/sortable";
-import TaskItem from "./EditableTaskItem";
+import TaskItem from "../shared/TaskItem";
 
 const EditableExperimentTasks = ({
   tasks,

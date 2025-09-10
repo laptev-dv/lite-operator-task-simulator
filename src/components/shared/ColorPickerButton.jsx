@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import {
   Chip,
   Popover,
 } from "@mui/material";
 import { ChromePicker } from "react-color";
 
-function ColorPickerButton({ color, onChange }) {
+function ColorPickerButton({ color, onChange, disabled=false }) {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,15 +26,18 @@ function ColorPickerButton({ color, onChange }) {
   return (
     <>
       <Chip
+        clickable={!disabled}
         sx={{
           borderRadius: 20,
           width: 40,
           height: 40,
           backgroundColor: color,
           border: "1px solid #ccc",
-          cursor: "pointer",
         }}
-        onClick={handleClick}
+        onClick={(event)=>{
+          if(!disabled) { handleClick(event) }
+        }
+      }
       />
       <Popover
         id={id}

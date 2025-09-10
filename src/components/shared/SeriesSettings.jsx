@@ -16,10 +16,11 @@ import {
   Stack,
 } from "@mui/material";
 
-const EditableSeriesSettings = ({
+const SeriesSettings = ({
   parameters,
   onParamChange,
   tasksCount = 1,
+  static: isStatic = false,
 }) => {
   const renderEditableRow = (
     label,
@@ -38,7 +39,7 @@ const EditableSeriesSettings = ({
           type={type}
           label={`${label}${unit !== null ? `, ${unit}` : ""}`}
           value={value}
-          onChange={(e) => {
+          onChange={(e) => {            
             let val =
               type === "number" ? Number(e.target.value) : e.target.value;
 
@@ -54,12 +55,13 @@ const EditableSeriesSettings = ({
             min,
             max,
           }}
+          disabled={isStatic}
         />
       </TableCell>
     </TableRow>
   );
 
-  const handleEfficiencyChange = (event, newValue, activeThumb) => {
+  const handleEfficiencyChange = (event, newValue, activeThumb) => {    
     if (!Array.isArray(newValue)) return;
 
     const [min, max] = newValue;
@@ -86,9 +88,12 @@ const EditableSeriesSettings = ({
                   <Select
                     label="Режим"
                     value={parameters.mode}
-                    onChange={(e) => onParamChange("mode", e.target.value)}
+                    onChange={(e) => {
+                      onParamChange("mode", e.target.value);
+                    }}
                     size="small"
                     fullWidth
+                    disabled={isStatic}
                   >
                     <MenuItem value="adaptive">Адаптивный</MenuItem>
                     <MenuItem value="strict">Жесткий</MenuItem>
@@ -96,6 +101,28 @@ const EditableSeriesSettings = ({
                 </FormControl>
               </TableCell>
             </TableRow>
+
+            <TableRow sx={{ td: { borderBottom: 0, paddingBottom: 1 } }}>
+              <TableCell>
+                <TextField
+                  fullWidth
+                  label="Название эксперимента"
+                  variant="outlined"
+                  size="small"
+                  value={parameters.experimentName}
+                  onChange={(e) => {
+                    onParamChange("experimentName", e.target.value);
+                  }}
+                  inputProps={{
+                    style: {
+                      fontSize: "1rem",
+                    },
+                  }}
+                  disabled={isStatic}
+                />
+              </TableCell>
+            </TableRow>
+
             {parameters.mode === "adaptive" &&
               renderEditableRow(
                 "Номер начальной задачи",
@@ -126,31 +153,31 @@ const EditableSeriesSettings = ({
             {parameters.mode === "adaptive" && (
               <>
                 <TableRow sx={{ td: { borderBottom: 0, paddingBottom: 1 } }}>
-                <TableCell>
+                  <TableCell>
                     <Stack direction='row' justifyContent="space-between" alignItems='center' spacing={8} sx={{mt:2}}>
-                    <Typography variant="body2">Эффективность,&nbsp;%</Typography>
-                    <Slider
-                      valueLabelFormat={(value) => `${value}%`}
-                      value={[
-                        parameters.efficiencyMin,
-                        parameters.efficiencyMax,
-                      ]}
-                      onChange={(e, newValue, activeThumb) =>
-                        handleEfficiencyChange(e, newValue, activeThumb)
-                      }
-                      valueLabelDisplay="on"
-                      min={0}
-                      max={100}
-                      step={1}
-                      disableSwap
-                      sx={{
-                        mt: 2,
-                        "& .MuiSlider-valueLabel": {
-                          backgroundColor: "primary.main",
-                          borderRadius: 1,
-                        },
-                      }}
-                    />
+                      <Typography variant="body2">Эффективность,&nbsp;%</Typography>
+                      <Slider
+                        valueLabelFormat={(value) => `${value}%`}
+                        value={[
+                          parameters.efficiencyMin,
+                          parameters.efficiencyMax,
+                        ]}
+                        onChange={(e, newValue, activeThumb) =>
+                          handleEfficiencyChange(e, newValue, activeThumb)
+                        }
+                        valueLabelDisplay="on"
+                        min={0}
+                        max={100}
+                        step={1}
+                        disableSwap
+                        disabled={isStatic}
+                        sx={{
+                          mt: 2,
+                          "& .MuiSlider-valueLabel": {
+                            borderRadius: 1,
+                          },
+                        }}
+                      />
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -163,4 +190,4 @@ const EditableSeriesSettings = ({
   );
 };
 
-export default EditableSeriesSettings;
+export default SeriesSettings;

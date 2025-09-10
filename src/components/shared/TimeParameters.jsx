@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -21,35 +21,55 @@ const timeColors = {
 const baseHeight = 12;
 const maxHeight = 40;
 
-function TimeParameters({ parameters }) {
-  // Получаем параметры с дефолтными значениями
-  const { stimulusTime, responseTime, pauseTime } = parameters;
-
-  // Конвертер единиц
+function TimeParameters({ parameters, onParamChange, static: isStatic = false }) {
+  // Конвертер единиц измерения
   const toSeconds = (ms) => (ms / 1000).toFixed(1);
+  const toMilliseconds = (s) => Math.round(Number(s) * 1000);
 
-  // Локальные значения (в секундах)
-  const localParams = {
-    stimulusTime: toSeconds(stimulusTime),
-    responseTime: toSeconds(responseTime),
-    pauseTime: toSeconds(pauseTime),
-  };
+  // Локальное состояние для редактируемых значений (в секундах)
+  const [localParams, setLocalParams] = useState({
+    stimulusTime: toSeconds(parameters.stimulusTime),
+    responseTime: toSeconds(parameters.responseTime),
+    pauseTime: toSeconds(parameters.pauseTime),
+  });
 
   const [hoveredItem, setHoveredItem] = useState(null);
 
+  // Синхронизация с props
+  useEffect(() => {
+    setLocalParams({
+      stimulusTime: toSeconds(parameters.stimulusTime),
+      responseTime: toSeconds(parameters.responseTime),
+      pauseTime: toSeconds(parameters.pauseTime),
+    });
+  }, [parameters]);
+
+  // Обработчик изменений
+  const handleParamChange = (field, value) => {    
+    const newParams = {
+      ...localParams,
+      [field]: value,
+    };
+    setLocalParams(newParams);
+    onParamChange({
+      [field]: toMilliseconds(value),
+    });
+  };
+
   // Рассчитываем производные значения (в миллисекундах)
   const totalTimeMs =
-    (parameters.stimulusTime || 500) +
-    (parameters.responseTime || 1000) +
-    (parameters.pauseTime || 300);
+    toMilliseconds(localParams.stimulusTime) +
+    toMilliseconds(localParams.responseTime) +
+    toMilliseconds(localParams.pauseTime);
 
   const responsePeriodTimeMs =
-    (parameters.stimulusTime || 500) + (parameters.responseTime || 1000);
+    toMilliseconds(localParams.stimulusTime) +
+    toMilliseconds(localParams.responseTime);
 
   // Расчет процентов для прогресс-бара
   const calculatePercentage = (timeMs) => (timeMs / totalTimeMs) * 100;
 
-  // Получение ширины сегмента в зависимости от наведения курсором
+  // Получение ширины сегмента в зависимости наведения курсором
   const getSegmentHeight = (segment) => {
     if (!hoveredItem) return baseHeight;
 
@@ -67,11 +87,11 @@ function TimeParameters({ parameters }) {
     return baseHeight;
   };
 
-  // Визуализация прогресс-бара
+  // Визуализация вертикального прогресс-бара
   const renderTimeBar = () => {
-    const stimulusMs = parameters.stimulusTime || 500;
-    const responseMs = parameters.responseTime || 1000;
-    const pauseMs = parameters.pauseTime || 300;
+    const stimulusMs = toMilliseconds(localParams.stimulusTime);
+    const responseMs = toMilliseconds(localParams.responseTime);
+    const pauseMs = toMilliseconds(localParams.pauseTime);
 
     return (
       <Stack direction="row" sx={{ alignItems: "end" }}>
@@ -105,7 +125,7 @@ function TimeParameters({ parameters }) {
     );
   };
 
-  // Рендер строки таблицы с обработчиками наведения курсоров
+  // Рендер строки таблицы с обработчиками наведения курсором
   const renderTableRow = (label, value, color = null, hoverKey = null) => {
     return (
       <TableRow
@@ -114,6 +134,7 @@ function TimeParameters({ parameters }) {
         sx={{
           "&:hover": {
             backgroundColor: hoverKey ? "rgba(0, 0, 0, 0.04)" : "inherit",
+            cursor: hoverKey ? "pointer" : "default",
           },
           td: { borderBottom: 0, paddingBottom: 1 },
         }}
@@ -134,15 +155,17 @@ function TimeParameters({ parameters }) {
           <TextField
             fullWidth
             label={`${label}, сек`}
+            type="number"
             size="small"
             value={value}
-            disabled
-            sx={{
-              "& .Mui-disabled": {
-                color: "inherit", // Сохраняем цвет текста
-                WebkitTextFillColor: "inherit", // Для Safari
-              },
+            onChange={(e) =>
+              handleParamChange(hoverKey + "Time", e.target.value)
+            }
+            inputProps={{
+              min: 0.1,
+              step: 0.1,
             }}
+            disabled={isStatic}
           />
         </TableCell>
       </TableRow>
@@ -179,6 +202,7 @@ function TimeParameters({ parameters }) {
                 sx={{
                   "&:hover": {
                     backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    cursor: "default",
                   },
                   td: { paddingBottom: 1 },
                 }}
@@ -192,6 +216,7 @@ function TimeParameters({ parameters }) {
                 sx={{
                   "&:hover": {
                     backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    cursor: "default",
                   },
                   td: { borderBottom: 0, paddingBottom: 1 },
                 }}
