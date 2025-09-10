@@ -96,7 +96,7 @@ function LibraryPage() {
     if (type === "папку") {
       setFolderDialogOpen(true);
     } else if (type === "эксперимент") {
-      navigate("/lite-operator-task-simulator/experiment/create");
+      navigate("/experiment/create");
     }
   };
 
@@ -110,7 +110,7 @@ function LibraryPage() {
       const response = await folderApi.create({ name });
       const newFolder = response.data;
       setFolders([...folders, newFolder]);
-      navigate(`/lite-operator-task-simulator/folder/${newFolder.id}`);
+      navigate(`/folder/${newFolder.id}`);
     } catch (error) {
       console.error("Ошибка создания папки:", error);
     } finally {
@@ -216,7 +216,7 @@ function LibraryPage() {
                 {currentItems.map((item, index) => (
                   <Box key={item.id}>
                     <Link
-                      to={`/lite-operator-task-simulator/${activeTab === 0 ? "experiment" : "folder"}/${
+                      to={`/${activeTab === 0 ? "experiment" : "folder"}/${
                         item.id
                       }`}
                       style={{ textDecoration: "none", color: "inherit" }}

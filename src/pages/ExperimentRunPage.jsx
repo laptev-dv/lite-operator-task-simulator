@@ -205,13 +205,13 @@ const ExperimentRunPage = () => {
       const response = await sessionApi.create(sessionData);
 
       if (response.data?.id) {
-        navigate(`/lite-operator-task-simulator/session/${response.data.id}`);
+        navigate(`/session/${response.data.id}`);
       } else {
         throw new Error("Не удалось получить ID созданной сессии");
       }
     } catch (error) {
       console.error("Ошибка сохранения сессии:", error);
-      navigate(`/lite-operator-task-simulator/experiment/${id}`);
+      navigate(`/experiment/${id}`);
     }
   }, [id, taskResults, navigate, saveTaskExecution]);
 

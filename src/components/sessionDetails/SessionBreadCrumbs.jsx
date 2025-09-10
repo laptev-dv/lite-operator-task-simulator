@@ -6,7 +6,7 @@ const SessionBreadCrumbs = ({ experimentId, lastName = "Сессия" }) => (
   <Breadcrumbs separator={"/"} sx={{ mb: 1 }}>
     <Link
       component={RouterLink}
-      to="/lite-operator-task-simulator/library"
+      to="/library"
       style={{
         textDecoration: "none",
         color: "primary",
@@ -18,7 +18,7 @@ const SessionBreadCrumbs = ({ experimentId, lastName = "Сессия" }) => (
 
     <Link
       component={RouterLink}
-      to={`/lite-operator-task-simulator/experiment/${experimentId}`}
+      to={`/experiment/${experimentId}`}
       style={{
         textDecoration: "none",
         color: "primary",

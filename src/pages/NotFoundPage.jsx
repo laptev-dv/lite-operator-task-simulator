@@ -11,8 +11,8 @@ function NotFoundPage() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
         textAlign: 'center',
+        mt: 16
       }}
     >
       {/* Иконка */}
@@ -32,7 +32,7 @@ function NotFoundPage() {
       <Button
         variant="contained"
         component={Link}
-        to="/lite-operator-task-simulator/"
+        to="/"
         sx={{ mt: 2 }}
       >
         Вернуться на главную

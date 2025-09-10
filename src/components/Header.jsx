@@ -29,7 +29,16 @@ function Header() {
   return (
       <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography 
+            variant="h6" 
+            component={RouterLink} 
+            to="/library"
+            sx={{ 
+              flexGrow: 1, 
+              color: 'inherit', 
+              textDecoration: 'none'
+            }}
+          >
             Имитатор операторской задачи
           </Typography>
 
@@ -37,7 +46,7 @@ function Header() {
             <Button 
               color="inherit" 
               component={RouterLink} 
-              to="/lite-operator-task-simulator/library"
+              to="/library"
               startIcon={<LibraryBooksIcon />}
             >
               Исследования
@@ -45,10 +54,10 @@ function Header() {
             <Button 
               color="inherit" 
               component={RouterLink} 
-              to="/lite-operator-task-simulator/profile"
+              to="/info"
               startIcon={<PersonIcon />}
             >
-              Подсказка
+              Инфо
             </Button>
           </Box>
 
@@ -78,7 +87,7 @@ function Header() {
             >
               <MenuItem 
                 component={RouterLink} 
-                to="/lite-operator-task-simulator/library"
+                to="/library"
                 onClick={handleClose}
               >
                 <LibraryBooksIcon sx={{ mr: 1 }} />
@@ -86,11 +95,11 @@ function Header() {
               </MenuItem>
               <MenuItem 
                 component={RouterLink} 
-                to="/lite-operator-task-simulator/profile"
+                to="/info"
                 onClick={handleClose}
               >
                 <PersonIcon sx={{ mr: 1 }} />
-                Подсказка
+                Инфо
               </MenuItem>
             </Menu>
           </Box>

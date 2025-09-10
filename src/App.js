@@ -13,12 +13,11 @@ import ExperimentRunPage from "./pages/ExperimentRunPage";
 
 function App() {
   return (
-    <>
-      <Routes basename={process.env.PUBLIC_URL}>
-        <Route path="lite-operator-task-simulator/" element={<MainLayout />}>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
           <Route index element={<LibraryPage />} />
           <Route path="library" element={<LibraryPage />} />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="info" element={<ProfilePage />} />
 
           <Route path="experiment">
             <Route path="create" element={<CreateExperimentPage />} />
@@ -28,16 +27,15 @@ function App() {
 
           <Route path="folder/:id" element={<FolderPage />} />
           <Route path="session/:id" element={<SessionDetailPage />} />
+          
+          {/* Страница 404 с MainLayout */}
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
-        <Route path="lite-operator-task-simulator/experiment/:id/run" element={<ExperimentLayout />}>
+        <Route path="experiment/:id/run" element={<ExperimentLayout />}>
           <Route index element={<ExperimentRunPage />} />
         </Route>
-
-        {/* Страница 404 */}
-        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </>
   );
 }
 

@@ -6,7 +6,7 @@ const ExperimentBreadcrumbs = ({ folderId, lastName = "Эксперимент" }
   <Breadcrumbs separator={"/"} sx={{ mb: 1 }}>
     <Link
       component={RouterLink}
-      to="/lite-operator-task-simulator/library"
+      to="/library"
       style={{
         textDecoration: "none",
         color: "primary",

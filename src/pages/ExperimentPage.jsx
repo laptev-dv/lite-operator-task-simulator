@@ -155,7 +155,7 @@ function ExperimentPage() {
   };
 
   const handleCopyClick = () => {
-    navigate("/lite-operator-task-simulator/experiment/create", {
+    navigate("/experiment/create", {
       state: {
         copiedExperiment: experiment,
         fromFolder: folderId,
@@ -165,7 +165,7 @@ function ExperimentPage() {
   };
 
   const handleStartExperiment = () => {
-    navigate(`/lite-operator-task-simulator/experiment/${id}/run`, { state: { experiment } });
+    navigate(`/experiment/${id}/run`, { state: { experiment } });
   };
 
   const handleSaveChanges = async () => {
@@ -181,7 +181,7 @@ function ExperimentPage() {
   const handleDeleteExperiment = async () => {
     try {
       await experimentApi.delete(id);
-      navigate("/lite-operator-task-simulator/library");
+      navigate("/library");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -190,7 +190,7 @@ function ExperimentPage() {
   };
 
   const handleViewAllSessions = () => {
-    navigate(`/lite-operator-task-simulator/experiment/${id}/sessions`);
+    navigate(`/experiment/${id}/sessions`);
   };
 
   if (!experiment && experimentLoading) {
@@ -310,7 +310,7 @@ function ExperimentPage() {
                   {sessions.slice(0, 3).map((session, index) => (
                     <Box key={session.id}>
                       <Link
-                        to={`/lite-operator-task-simulator/session/${session.id}`}
+                        to={`/session/${session.id}`}
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
                         <SessionItem

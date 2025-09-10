@@ -106,7 +106,7 @@ function FolderPage() {
   const handleDelete = async () => {
     try {
       await folderApi.delete(id);
-      navigate('/lite-operator-task-simulator/library');
+      navigate('/library');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -265,7 +265,7 @@ function FolderPage() {
               {folder.experiments.map((experiment, index) => (
                 <Box key={experiment.id}>
                   <Link
-                    to={`/lite-operator-task-simulator/experiment/${experiment.id}`}
+                    to={`/experiment/${experiment.id}`}
                     state={{ fromFolder: folder.id }}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
