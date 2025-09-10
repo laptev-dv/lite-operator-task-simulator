@@ -4,20 +4,17 @@ import {
   Container,
   Paper,
   Typography,
-  Tabs,
-  Tab,
   Button,
   TextField,
   List,
   Divider,
-  Menu,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
   useTheme,
   Stack,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -25,41 +22,26 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import ExperimentItem from "../components/ExperimentItem";
-import FolderItem from "../components/FolderItem";
-import CreateFolderDialog from "../components/CreateFolderDialog";
 import { experimentApi } from "../api/experimentApi";
-import { folderApi } from "../api/folderApi";
 
 function LibraryPage() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date");
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [folderDialogOpen, setFolderDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [experiments, setExperiments] = useState([]);
-  const [folders, setFolders] = useState([]);
 
   // Загрузка данных при изменении параметров
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        if (activeTab === 0) {
-          const response = await experimentApi.getAll({
-            search: searchQuery,
-            sortBy: sortBy
-          });
-          setExperiments(response.data);
-        } else {
-          const response = await folderApi.getAll({
-            search: searchQuery,
-            sortBy: sortBy
-          });
-          setFolders(response.data);
-        }
+        const response = await experimentApi.getAll({
+          search: searchQuery,
+          sortBy: sortBy
+        });
+        setExperiments(response.data);
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       } finally {
@@ -73,54 +55,21 @@ function LibraryPage() {
     }, 500);
 
     return () => clearTimeout(timerId);
-  }, [activeTab, searchQuery, sortBy]);
-
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
+  }, [searchQuery, sortBy]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const handleAddClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleAddClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAddItem = (type) => {
-    handleAddClose();
-    if (type === "папку") {
-      setFolderDialogOpen(true);
-    } else if (type === "эксперимент") {
-      navigate("/experiment/create");
-    }
+  const handleCreateExperiment = () => {
+    navigate("/experiment/create");
   };
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
   };
 
-  const handleCreateFolder = async (name) => {
-    try {
-      setLoading(true);
-      const response = await folderApi.create({ name });
-      const newFolder = response.data;
-      setFolders([...folders, newFolder]);
-      navigate(`/folder/${newFolder.id}`);
-    } catch (error) {
-      console.error("Ошибка создания папки:", error);
-    } finally {
-      setLoading(false);
-      setFolderDialogOpen(false);
-    }
-  };
-
-  const currentItems = activeTab === 0 ? experiments : folders;
-  const hasItems = currentItems.length > 0;
+  const hasItems = experiments.length > 0;
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -141,65 +90,51 @@ function LibraryPage() {
               Исследования
             </Typography>
 
-            <Stack direction="row" spacing={1}>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddClick}
-                size="small"
-                disabled={loading}
-              >
-                Добавить
-              </Button>
-            </Stack>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleCreateExperiment}
+              disabled={loading}
+            >
+              эксперимент
+            </Button>
           </Stack>
         </Box>
 
         {/* Основное содержимое */}
         <Box sx={{ p: 3 }}>
-          {/* Вкладки и фильтры */}
-          <Box sx={{ mb: 3 }}>
-            <Tabs 
-              value={activeTab} 
-              onChange={handleTabChange} 
-              sx={{ mb: 2 }}
-            >
-              <Tab label="Эксперименты" disabled={loading} />
-              <Tab label="Папки" disabled={loading} />
-            </Tabs>
-
-            <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-              <FormControl size="small" sx={{ minWidth: 180 }}>
-                <InputLabel>Сортировка</InputLabel>
-                <Select
-                  value={sortBy}
-                  onChange={handleSortChange}
-                  label="Сортировка"
-                  disabled={loading}
-                >
-                  <MenuItem value="date">По дате</MenuItem>
-                  <MenuItem value="name">По названию</MenuItem>
-                </Select>
-              </FormControl>
-
-              <TextField
-                size="small"
-                fullWidth
-                variant="outlined"
-                placeholder="Поиск..."
-                value={searchQuery}
-                onChange={handleSearchChange}
+          {/* Фильтры */}
+          <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel>Сортировка</InputLabel>
+              <Select
+                value={sortBy}
+                onChange={handleSortChange}
+                label="Сортировка"
                 disabled={loading}
-                InputProps={{
-                  startAdornment: (
-                    <SearchIcon color="action" sx={{ mr: 1 }} />
-                  ),
-                }}
-              />
-            </Stack>
-          </Box>
+              >
+                <MenuItem value="date">По дате</MenuItem>
+                <MenuItem value="name">По названию</MenuItem>
+              </Select>
+            </FormControl>
 
-          {/* Список элементов */}
+            <TextField
+              size="small"
+              fullWidth
+              variant="outlined"
+              placeholder="Поиск..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              disabled={loading}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon color="action" sx={{ mr: 1 }} />
+                ),
+              }}
+            />
+          </Stack>
+
+          {/* Список экспериментов */}
           <Box>
             {loading ? (
               <Box
@@ -213,21 +148,15 @@ function LibraryPage() {
               </Box>
             ) : hasItems ? (
               <List disablePadding>
-                {currentItems.map((item, index) => (
-                  <Box key={item.id}>
+                {experiments.map((experiment, index) => (
+                  <Box key={experiment.id}>
                     <Link
-                      to={`/${activeTab === 0 ? "experiment" : "folder"}/${
-                        item.id
-                      }`}
+                      to={`/experiment/${experiment.id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {activeTab === 0 ? (
-                        <ExperimentItem experiment={item} />
-                      ) : (
-                        <FolderItem folder={item} />
-                      )}
+                      <ExperimentItem experiment={experiment} />
                     </Link>
-                    {index !== currentItems.length - 1 && (
+                    {index !== experiments.length - 1 && (
                       <Divider sx={{ my: 1 }} />
                     )}
                   </Box>
@@ -243,41 +172,13 @@ function LibraryPage() {
                 }}
               >
                 <Typography variant="body1" color="text.secondary">
-                  {searchQuery ? 'Ничего не найдено' : 'Нет доступных элементов'}
+                  {searchQuery ? 'Ничего не найдено' : 'Нет доступных экспериментов'}
                 </Typography>
               </Box>
             )}
           </Box>
         </Box>
       </Paper>
-
-      {/* Меню добавления */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleAddClose}
-      >
-        <MenuItem 
-          onClick={() => handleAddItem("эксперимент")} 
-          disabled={loading}
-        >
-          Создать эксперимент
-        </MenuItem>
-        <MenuItem 
-          onClick={() => handleAddItem("папку")} 
-          disabled={loading}
-        >
-          Создать папку
-        </MenuItem>
-      </Menu>
-
-      {/* Диалог создания папки */}
-      <CreateFolderDialog
-        open={folderDialogOpen}
-        onClose={() => setFolderDialogOpen(false)}
-        onCreate={handleCreateFolder}
-        loading={loading}
-      />
     </Container>
   );
 }
