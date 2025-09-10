@@ -1,1 +1,1 @@
-# Operator task simulator
+# Имитатор операторской задачи
