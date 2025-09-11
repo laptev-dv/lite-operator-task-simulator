@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/lite-operator-task-simulator/static/css/main.e6c13ad2.css",
-    "main.js": "/lite-operator-task-simulator/static/js/main.5652c84a.js",
+    "main.js": "/lite-operator-task-simulator/static/js/main.d2bd2183.js",
     "index.html": "/lite-operator-task-simulator/index.html",
     "main.e6c13ad2.css.map": "/lite-operator-task-simulator/static/css/main.e6c13ad2.css.map",
-    "main.5652c84a.js.map": "/lite-operator-task-simulator/static/js/main.5652c84a.js.map"
+    "main.d2bd2183.js.map": "/lite-operator-task-simulator/static/js/main.d2bd2183.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.5652c84a.js"
+    "static/js/main.d2bd2183.js"
   ]
 }
