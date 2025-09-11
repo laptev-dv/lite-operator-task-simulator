@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   Table, 
   TableBody, 
@@ -6,15 +5,9 @@ import {
   TableContainer, 
   TableHead, 
   TableRow,
-  Chip,
   Typography,
   Stack
 } from '@mui/material';
-import { 
-  CheckCircle,
-  Cancel,
-  AccessTimeFilled as Timer,
-} from '@mui/icons-material';
 import { formatDuration } from '../../utils/dateFormatter'
 
 const SessionResultsTable = ({ results }) => {
@@ -32,7 +25,12 @@ const SessionResultsTable = ({ results }) => {
         <TableHead>
           <TableRow>
             <TableCell>№</TableCell>
-            <TableCell align="center">Ответы</TableCell>
+            <TableCell align="center">
+              <Stack direction="column">
+                <Typography variant="body2">Ответы</Typography> 
+                <Typography variant="body2">(верно\ошибка\пропуск)</Typography> 
+              </Stack>
+              </TableCell>
             <TableCell align="center">Эффективность</TableCell>
             <TableCell align="center">Среднее время</TableCell>
             <TableCell align="center">Нагрузка</TableCell>
@@ -45,26 +43,7 @@ const SessionResultsTable = ({ results }) => {
             <TableRow key={task.taskId || index}>
               <TableCell>{task.taskName || `${index + 1}`}</TableCell>
               <TableCell align="center">
-                <Stack justifyContent='center' gap={1} direction='row'>
-                  <Chip 
-                    icon={<CheckCircle />} 
-                    label={task.successCount} 
-                    color="success" 
-                    size="small" 
-                  />
-                  <Chip 
-                    icon={<Cancel />} 
-                    label={task.errorCount} 
-                    color="error" 
-                    size="small" 
-                  />
-                  <Chip 
-                    icon={<Timer />} 
-                    label={task.missCount} 
-                    color="warning" 
-                    size="small" 
-                  />
-                </Stack>
+                {task.successCount} \ {task.errorCount} \ {task.missCount}  
               </TableCell>
               <TableCell align="center">{(task.efficiency * 100).toFixed(1)}%</TableCell>
               <TableCell align="center">{formatDuration(task.avgResponseTime)}</TableCell>

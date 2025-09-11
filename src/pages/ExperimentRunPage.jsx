@@ -170,8 +170,8 @@ const ExperimentRunPage = () => {
   // Сохранение статистики по выполнению задачи
   const saveTaskExecution = useCallback(() => {
     const rightAnswers = presentationResults.filter(presentation => 
-      presentation.correctAnswer.row == presentation.userAnswer?.row 
-      && presentation.correctAnswer.column == presentation.userAnswer?.column
+      presentation.correctAnswer.row === presentation.userAnswer?.row 
+      && presentation.correctAnswer.column === presentation.userAnswer?.column
     )
     const efficiency = parseFloat(rightAnswers.length) / parseFloat(presentationResults.length) * 100
 
@@ -205,7 +205,7 @@ const ExperimentRunPage = () => {
       const response = await sessionApi.create(sessionData);
 
       if (response.data?.id) {
-        navigate(`/session/${response.data.id}`);
+        navigate(`/experiment/${response.data.id}`);
       } else {
         throw new Error("Не удалось получить ID созданной сессии");
       }

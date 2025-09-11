@@ -68,6 +68,7 @@ const AsciiSymbolSelect = ({ value, onChange, fontFamily, disabled=false }) => {
         onChange(newValue?.char || 'X');
       }}
       getOptionLabel={(option) => option.char}
+      disabled={disabled}
       renderInput={(params) => (
         <TextField
           {...params}

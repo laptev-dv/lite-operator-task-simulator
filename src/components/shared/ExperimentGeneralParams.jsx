@@ -215,10 +215,10 @@ const ExperimentGeneralParams = ({ parameters, onParamChange, static: isStatic =
           {renderDualNumberRow(
             "rows",
             parameters.rows,
-            "Кол-во строк",
+            "Строк",
             "columns",
             parameters.columns,
-            "Кол-во столбцов",
+            "Столбцов",
             "шт",
             1,
             9,

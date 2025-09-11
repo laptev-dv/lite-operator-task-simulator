@@ -74,12 +74,12 @@ function TimeParameters({ parameters, onParamChange, static: isStatic = false })
     if (!hoveredItem) return baseHeight;
 
     if (hoveredItem === "total") {
-      return maxHeight - 16;
+      return maxHeight - 8;
     } else if (
       hoveredItem === "responsePeriod" &&
       (segment === "stimulus" || segment === "response")
     ) {
-      return maxHeight;
+      return maxHeight - 4;
     } else if (hoveredItem === segment) {
       return maxHeight;
     }

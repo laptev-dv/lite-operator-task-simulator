@@ -42,20 +42,6 @@ function EditableExperimentParameters({
     onExperimentChange(updatedExperiment);
   };
 
-  const handleTaskNameChange = (taskId, newName) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          name: newName,
-        };
-      }
-      return task;
-    });
-
-    onTasksChange(updatedTasks);
-  };
-
   const handleDeleteTask = (id) => {
     const updatedTasks = tasks.filter((task) => task.id !== id);
 
@@ -73,7 +59,6 @@ function EditableExperimentParameters({
       const newTask = {
         ...taskToCopy,
         id: Date.now().toString(),
-        name: `${taskToCopy.name} (копия)`,
       };
       const updatedTasks = [
         ...tasks.slice(0, taskIndex + 1),
@@ -121,7 +106,6 @@ function EditableExperimentParameters({
               onTaskClick={handleTaskClick}
               onDeleteTask={handleDeleteTask}
               onCopyTask={handleCopyTask}
-              onTaskNameChange={handleTaskNameChange}
               onTasksChange={(newTasks) => {
                 onTasksChange(newTasks);
               }}

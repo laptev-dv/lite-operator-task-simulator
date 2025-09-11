@@ -75,6 +75,7 @@ const FontSelect = ({ value, onChange, disabled = false }) => {
       disableClearable
       onChange={(event, newValue) => onChange(newValue)}
       loading={loading}
+      disabled={disabled}
       renderInput={(params) => (
         <TextField
           {...params}

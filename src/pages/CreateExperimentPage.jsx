@@ -12,11 +12,9 @@ import { Save as SaveIcon } from "@mui/icons-material";
 import EditableExperimentParameters from "../components/createExperiment/EditableExperimentParameters";
 import { useNavigate, useLocation } from "react-router-dom";
 import { experimentApi } from "../api/experimentApi";
-import ExperimentBreadcrumbs from "../components/experimentDetails/ExperimentBreadCrumbs";
 
 function CreateExperimentPage() {
   const location = useLocation();
-  const folderId = location.state?.fromFolder;
   const copiedExperiment = location.state?.copiedExperiment;
 
   const navigate = useNavigate();
@@ -68,7 +66,7 @@ function CreateExperimentPage() {
     if (copiedExperiment) {
       // Заполняем данные из копируемого эксперимента
       setExperiment({
-        experimentName: `${copiedExperiment.name} (копия)`,
+        experimentName: getDefaultExperimentName(),
         mode: copiedExperiment.mode,
         presentationsPerTask: copiedExperiment.presentationsPerTask,
         seriesTime: copiedExperiment.seriesTime,
@@ -145,8 +143,10 @@ function CreateExperimentPage() {
       // Отправляем запрос на сервер
       const response = await experimentApi.create(experimentData);
 
-      if (response.data?.id) {
-        navigate(`/experiment/${response.data.id}`);
+      if (response.data) {
+            navigate(`/experiment/${response.data.id}/run`, {
+              state: { experiment: response.data }
+            });
       } else {
         throw new Error("Не удалось получить ID созданного эксперимента");
       }
@@ -172,8 +172,6 @@ function CreateExperimentPage() {
         pb: 0,
       }}
     >
-      <ExperimentBreadcrumbs folderId={folderId} lastName="Новый эксперимент" />
-
       <EditableExperimentParameters
         tasks={tasks}
         onTasksChange={handleTasksChange}
@@ -195,7 +193,6 @@ function CreateExperimentPage() {
         }}
       >
         <Toolbar>
-          {/* Отображение текущего режима слева */}
           <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
             <Typography variant="body1" sx={{ mr: 2 }}>
               Текущий режим:
@@ -207,7 +204,7 @@ function CreateExperimentPage() {
             />
           </Box>
 
-          {/* Кнопка сохранения справа */}
+          {/* Кнопка запуска эксперимента */}
           <Box>
             <Button
               variant="contained"
@@ -222,7 +219,7 @@ function CreateExperimentPage() {
                 my: 1,
               }}
             >
-              Сохранить эксперимент
+              Запустить эксперимент
             </Button>
           </Box>
         </Toolbar>

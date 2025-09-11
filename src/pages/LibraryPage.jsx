@@ -21,8 +21,8 @@ import {
   Search as SearchIcon,
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
-import ExperimentItem from "../components/ExperimentItem";
-import { experimentApi } from "../api/experimentApi";
+import ExperimentItem from "../components/ExperimentItem"; // Новый компонент для сессий
+import { sessionApi } from "../api/sessionApi"; // Импортируем API сессий
 
 function LibraryPage() {
   const theme = useTheme();
@@ -30,18 +30,18 @@ function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [loading, setLoading] = useState(true);
-  const [experiments, setExperiments] = useState([]);
+  const [sessions, setSessions] = useState([]);
 
   // Загрузка данных при изменении параметров
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await experimentApi.getAll({
+        const response = await sessionApi.getAll({
           search: searchQuery,
           sortBy: sortBy
         });
-        setExperiments(response.data);
+        setSessions(response);
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       } finally {
@@ -69,7 +69,7 @@ function LibraryPage() {
     setSortBy(event.target.value);
   };
 
-  const hasItems = experiments.length > 0;
+  const hasItems = sessions.length > 0;
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -87,7 +87,7 @@ function LibraryPage() {
             alignItems="center"
           >
             <Typography variant="h6" sx={{ fontWeight: 500 }}>
-              Исследования
+              Сессии
             </Typography>
 
             <Button
@@ -114,7 +114,7 @@ function LibraryPage() {
                 disabled={loading}
               >
                 <MenuItem value="date">По дате</MenuItem>
-                <MenuItem value="name">По названию</MenuItem>
+                <MenuItem value="name">По названию эксперимента</MenuItem>
               </Select>
             </FormControl>
 
@@ -134,7 +134,7 @@ function LibraryPage() {
             />
           </Stack>
 
-          {/* Список экспериментов */}
+          {/* Список сессий */}
           <Box>
             {loading ? (
               <Box
@@ -148,15 +148,15 @@ function LibraryPage() {
               </Box>
             ) : hasItems ? (
               <List disablePadding>
-                {experiments.map((experiment, index) => (
-                  <Box key={experiment.id}>
+                {sessions.map((session, index) => (
+                  <Box key={session.id}>
                     <Link
-                      to={`/experiment/${experiment.id}`}
+                      to={`/experiment/${session.id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      <ExperimentItem experiment={experiment} />
+                      <ExperimentItem experiment={session.experiment} />
                     </Link>
-                    {index !== experiments.length - 1 && (
+                    {index !== sessions.length - 1 && (
                       <Divider sx={{ my: 1 }} />
                     )}
                   </Box>
@@ -172,7 +172,7 @@ function LibraryPage() {
                 }}
               >
                 <Typography variant="body1" color="text.secondary">
-                  {searchQuery ? 'Ничего не найдено' : 'Нет доступных экспериментов'}
+                  {searchQuery ? 'Ничего не найдено' : 'Нет доступных сессий'}
                 </Typography>
               </Box>
             )}

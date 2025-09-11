@@ -56,6 +56,33 @@ export const sessionApi = {
     }
   },
 
+  // Получение всех сессий
+  getAll: async ({ search = '', sortBy = 'createdAt' }) => {
+    let sessions = storage.getAll(STORAGE_KEYS.SESSIONS);
+    
+    if (search) {
+      sessions = sessions.filter(session => 
+        session.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    sessions.sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    
+    sessions = sessions.map((session) => {
+      const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experiment);
+
+      return {
+          ...session,
+          experiment,
+      }
+    })
+
+    return sessions;
+  },
+
   // Получение сессий эксперимента
   getByExperiment: async (experimentId, userId) => {
     try {
@@ -63,16 +90,9 @@ export const sessionApi = {
         STORAGE_KEYS.SESSIONS,
         s => s.experiment === experimentId
       );
-
-      // Получаем данные пользователей (имитация populate)
-      const users = storage.getAll(STORAGE_KEYS.USERS);
       
       return {
-        data: sessions.map(session => ({
-          ...session,
-          user: users.find(u => u.id === session.user) || { id: session.user, username: 'Unknown' },
-          isMine: session.user === userId
-        }))
+        data: sessions
       };
     } catch (error) {
       throw error.response?.data || error;
@@ -87,14 +107,7 @@ export const sessionApi = {
         throw { status: 404, message: 'Сессия не найдена' };
       }
 
-      // Получаем связанные данные (имитация populate)
       const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experiment);
-      const user = storage.findById(STORAGE_KEYS.USERS, session.user);
-
-      // Проверка прав доступа
-      if (session.user !== userId && experiment?.author !== userId) {
-        throw { status: 403, message: 'Нет прав на просмотр этой сессии' };
-      }
 
       // Добавляем данные задач к результатам
       const resultsWithTasks = session.results.map(result => ({
@@ -109,9 +122,7 @@ export const sessionApi = {
         data: {
           ...session,
           experiment,
-          user,
           results: detailedResults,
-          isMine: session.user === userId
         }
       };
     } catch (error) {
@@ -128,14 +139,6 @@ export const sessionApi = {
       }
 
       const experiment = storage.findById(STORAGE_KEYS.EXPERIMENTS, session.experiment);
-      
-      // Проверка прав
-      const isOwner = session.user === userId;
-      const isExperimentAuthor = experiment?.author === userId;
-      
-      if (!isOwner && !isExperimentAuthor) {
-        throw { status: 403, message: 'Нет прав на удаление сессии' };
-      }
 
       // Удаляем сессию
       storage.remove(STORAGE_KEYS.SESSIONS, sessionId);

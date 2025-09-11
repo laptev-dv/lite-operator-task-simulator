@@ -5,8 +5,6 @@ import NotFoundPage from "./pages/NotFoundPage";
 import MainLayout from "./layouts/MainLayout";
 import ExperimentLayout from "./layouts/ExperimentLayout";
 import CreateExperimentPage from "./pages/CreateExperimentPage";
-import ExperimentPage from "./pages/ExperimentPage";
-import SessionsListPage from "./pages/SessionsListPage";
 import SessionDetailPage from "./pages/SessionDetailPage";
 import ExperimentRunPage from "./pages/ExperimentRunPage";
 
@@ -20,11 +18,8 @@ function App() {
 
           <Route path="experiment">
             <Route path="create" element={<CreateExperimentPage />} />
-            <Route path=":id" element={<ExperimentPage />} />
-            <Route path=":id/sessions" element={<SessionsListPage />} />
+            <Route path=":id" element={<SessionDetailPage />} />
           </Route>
-
-          <Route path="session/:id" element={<SessionDetailPage />} />
           
           {/* Страница 404 с MainLayout */}
           <Route path="*" element={<NotFoundPage />} />

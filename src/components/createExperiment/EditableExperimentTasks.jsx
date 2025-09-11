@@ -22,7 +22,6 @@ const EditableExperimentTasks = ({
   onTaskClick,
   onDeleteTask,
   onCopyTask,
-  onTaskNameChange,
   onTasksChange,
 }) => {
   const sensors = useSensors(
@@ -89,7 +88,6 @@ const EditableExperimentTasks = ({
                   isActive={activeTaskId === task.id}
                   onClick={() => onTaskClick(task.id)}
                   isDeleteDisabled={tasks.length <= 1}
-                  onTaskNameChange={onTaskNameChange}
                 />
                 {index < tasks.length - 1 && <Divider />}
               </React.Fragment>

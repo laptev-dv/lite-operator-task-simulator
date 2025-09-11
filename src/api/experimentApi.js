@@ -45,11 +45,7 @@ export const experimentApi = {
           tasks: exp.tasks || []
         },
         sessions: sessions.map(session => ({
-          id: session.id,
-          author: session.userName,
-          date: session.date,
-          duration: session.duration,
-          isMine: session.userId === exp.authorId,
+          ...session,
           results: {
             efficiency: calculateEfficiency(session.results),
             completedTasks: session.results?.length || 0
@@ -89,22 +85,4 @@ export const experimentApi = {
     
     return storage.remove(STORAGE_KEYS.EXPERIMENTS, id);
   },
-
-  getSessions: async (experimentId) => {
-    const sessions = storage.findWhere(STORAGE_KEYS.SESSIONS, s => s.experimentId === experimentId);
-    
-    return {
-      data: sessions.map(session => ({
-        id: session.id,
-        author: session.userName,
-        date: session.date,
-        duration: session.duration,
-        isMine: session.userId === session.experiment.authorId,
-        results: {
-          efficiency: calculateEfficiency(session.results),
-          completedTasks: session.results?.length || 0
-        }
-      }))
-    };
-  }
 };

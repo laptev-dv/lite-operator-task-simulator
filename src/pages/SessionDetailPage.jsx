@@ -1,36 +1,39 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  AppBar,
-  Toolbar,
-  Stack,
   Button,
   CircularProgress,
   Alert,
   Container,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionInfo from "../components/sessionDetails/SessionInfo";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import SessionActionsBar from "../components/sessionDetails/SessionActionsBar";
 import { sessionApi } from "../api/sessionApi";
 import SessionParameters from "../components/sessionDetails/SessionParameters";
-import SessionBreadCrumbs from "../components/sessionDetails/SessionBreadCrumbs";
-import { exportSessionToXLSX } from "../utils/exportSession"; // Добавлен импорт
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ExperimentParameters from "../components/experimentDetails/ExperimentParameters";
+import { exportSessionToXLSX } from "../utils/exportSession";
 
 function SessionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [sessionData, setSessionData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
 
   const handleExportPDF = async () => {
     try {
-      setLoading(true);
+      setActionLoading(true);
       const response = await sessionApi.exportToPDF(id);
       
-      // Создаем ссылку для скачивания
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -42,8 +45,26 @@ function SessionDetailPage() {
     } catch (error) {
       setError(error.message);
     } finally {
-      setLoading(false);
+      setActionLoading(false);
     }
+  };
+
+  const handleExportXLSX = () => {
+    exportSessionToXLSX(sessionData);
+  };
+
+  const handleDuplicateExperiment = async (newName) => {
+    navigate("/experiment/create", {
+      state: {
+        copiedExperiment: sessionData.experiment
+      },
+    });
+  };
+
+  const handleRepeatExperiment = () => {
+    navigate(`/experiment/${sessionData.experiment.id}/run`, {
+      state: { experiment: sessionData.experiment }
+    });
   };
 
   useEffect(() => {
@@ -53,7 +74,6 @@ function SessionDetailPage() {
         const response = await sessionApi.getById(id);
         setSessionData(response.data);
 
-        // Подгрузка шрифтов
         const fontFamilies = response.data.results.map(
           (result) => result.task.symbolFont
         );
@@ -96,7 +116,6 @@ function SessionDetailPage() {
       const errorRate = task.errorCount / totalPresentations;
       const missRate = task.missCount / totalPresentations;
 
-      // Расчет дополнительных метрик
       const performanceScore = successRate * (1 - task.avgResponseTime / 10000);
       const taskDifficulty = (task.rows * task.columns) / task.stimulusTime;
 
@@ -181,8 +200,6 @@ function SessionDetailPage() {
         pb: 0,
       }}
     >
-      <SessionBreadCrumbs experimentId={sessionData.experiment.id} />
-
       <SessionInfo
         sessionData={{
           ...sessionData,
@@ -199,43 +216,29 @@ function SessionDetailPage() {
         extendedResults={extendedResults}
       />
 
-      <SessionParameters sessionData={sessionData} />
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs value={activeTab} onChange={handleTabChange}>
+          <Tab label="Настройки" />
+          <Tab label="Результаты эксперимента" />
+        </Tabs>
+      </Box>
 
-      <AppBar
-        position="fixed"
-        color="inherit"
-        elevation={0}
-        sx={{
-          top: "auto",
-          bottom: 0,
-          borderTop: "1px solid",
-          borderColor: "divider",
-          backgroundColor: "background.default",
-        }}
-      >
-        <Toolbar>
-          <Stack sx={{ flexGrow: 1 }} direction={"row-reverse"} gap={2}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => exportSessionToXLSX(sessionData)}
-              startIcon={<FileDownloadIcon />}
-              sx={{ px: 4 }}
-            >
-              Экспорт XLSX
-            </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={handleExportPDF}
-                startIcon={<PictureAsPdfIcon />}
-                sx={{ px: 4 }}
-              >
-                Экспорт PDF
-              </Button>
-          </Stack>
-        </Toolbar>
-      </AppBar>
+      {activeTab === 0 && (
+        <ExperimentParameters parameters={sessionData.experiment} />
+      )}
+      
+      {activeTab === 1 && (
+        <SessionParameters sessionData={sessionData} />
+      )}
+
+      <SessionActionsBar
+        sessionData={sessionData}
+        onExportPDF={handleExportPDF}
+        onExportXLSX={handleExportXLSX}
+        onRepeatExperiment={handleRepeatExperiment}
+        onDuplicateExperiment={handleDuplicateExperiment}
+        loading={actionLoading}
+      />
     </Container>
   );
 }
