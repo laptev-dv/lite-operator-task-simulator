@@ -6,8 +6,11 @@ import {
   TableHead, 
   TableRow,
   Typography,
-  Stack
+  Stack,
+  Tooltip,
+  IconButton
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { formatDuration } from '../../utils/dateFormatter'
 
 const SessionResultsTable = ({ results }) => {
@@ -26,11 +29,19 @@ const SessionResultsTable = ({ results }) => {
           <TableRow>
             <TableCell>№</TableCell>
             <TableCell align="center">
-              <Stack direction="column">
-                <Typography variant="body2">Ответы</Typography> 
-                <Typography variant="body2">(верно\ошибка\пропуск)</Typography> 
+              <Stack direction="row" alignItems="center" justifyContent="center" spacing={0.5}>
+                <Typography variant="body2">Ответы</Typography>
+                <Tooltip 
+                  title="Верные ответы / Ошибки / Пропуски" 
+                  arrow
+                  placement="top"
+                >
+                  <IconButton size="small" sx={{ p: 0 }}>
+                    <InfoIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </Stack>
-              </TableCell>
+            </TableCell>
             <TableCell align="center">Эффективность</TableCell>
             <TableCell align="center">Среднее время</TableCell>
             <TableCell align="center">Нагрузка</TableCell>

@@ -13,6 +13,8 @@ import EditableExperimentParameters from "../components/createExperiment/Editabl
 import { useNavigate, useLocation } from "react-router-dom";
 import { experimentApi } from "../api/experimentApi";
 
+import { PlayArrow as PlayArrowIcon } from "@mui/icons-material";
+
 function CreateExperimentPage() {
   const location = useLocation();
   const copiedExperiment = location.state?.copiedExperiment;
@@ -209,17 +211,10 @@ function CreateExperimentPage() {
             <Button
               variant="contained"
               color="primary"
-              startIcon={<SaveIcon />}
+              startIcon={<PlayArrowIcon />}
               onClick={handleSaveExperiment}
-              sx={{
-                textTransform: "none",
-                fontWeight: 500,
-                px: 3,
-                py: 1,
-                my: 1,
-              }}
             >
-              Запустить эксперимент
+              Запустить
             </Button>
           </Box>
         </Toolbar>

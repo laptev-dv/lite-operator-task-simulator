@@ -1,4 +1,12 @@
 // sessionUtils.js
+function calculateDisappearancesPerMinute(task) {
+  const totalCycleTime = task.stimulusTime + task.responseTime + task.pauseTime;
+  const millisecondsPerMinute = 60000;
+  const disappearancesPerMinute = millisecondsPerMinute / totalCycleTime;
+  
+  return disappearancesPerMinute;
+}
+
 export const calculateDetailedStats = (results) => {
   return results.map(taskResult => {
     if (!taskResult.task || !taskResult.presentations) {
@@ -39,18 +47,19 @@ export const calculateDetailedStats = (results) => {
         } else {
           stats.errorCount++;
         }
-
-        if (presentation.responseTime) {
-          stats.totalResponseTime += presentation.responseTime;
-        }
+        
       } else {
         stats.missCount++;
+      }
+
+      if (presentation.responseTime) {
+          stats.totalResponseTime += presentation.responseTime;
       }
     });
 
     const totalPresentations = taskResult.presentations.length;
-    const efficiency = totalPresentations > 0 ? stats.successCount / totalPresentations : 0;
-    const avgResponseTime = totalPresentations > 0 ? stats.totalResponseTime / totalPresentations : 0;
+    const efficiency = stats.successCount / totalPresentations;
+    const avgResponseTime = stats.totalResponseTime / totalPresentations;
     
     const stimulusTime = taskResult.task.stimulusTime;
     const responseTime = taskResult.task.responseTime;
@@ -62,7 +71,7 @@ export const calculateDetailedStats = (results) => {
     const workload = (rows * columns) / totalTime;
     
     let entropy = 0;
-    if (efficiency > 0 && efficiency < 1) {
+    if (efficiency > 0) {
       entropy = -(efficiency * Math.log2(efficiency) + (1 - efficiency) * Math.log2(1 - efficiency));
     }
 
@@ -70,10 +79,10 @@ export const calculateDetailedStats = (results) => {
       return sum + (p.responseTime || 0);
     }, 0);
 
-    const disapperancesPerMinute = 1;
+    const disapperancesPerMinute = calculateDisappearancesPerMinute(taskResult.task);
     const perfomance = disapperancesPerMinute * (1 - entropy) * finalScore;
 
-    console.log(avgResponseTime);
+    console.log(disapperancesPerMinute);
 
     return {
       ...stats,

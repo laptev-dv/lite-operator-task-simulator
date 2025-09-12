@@ -1,5 +1,5 @@
 import { STORAGE_KEYS, storage } from './storage';
-import { calculateDetailedStats } from './sessionUtils'; // Вынесем сложную логику в отдельный файл
+import { calculateDetailedStats } from '../utils/sessionUtils'; // Вынесем сложную логику в отдельный файл
 import { v4 as uuid } from 'uuid';
 
 export const sessionApi = {
@@ -115,7 +115,7 @@ export const sessionApi = {
   },
 
   // Удаление сессии
-  delete: async (sessionId, userId) => {
+  delete: async (sessionId) => {
     try {
       const session = storage.findById(STORAGE_KEYS.SESSIONS, sessionId);
       if (!session) {

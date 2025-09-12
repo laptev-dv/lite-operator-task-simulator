@@ -7,7 +7,7 @@ import { ru } from "date-fns/locale";
 import SessionResultsTable from "./SessionResultsTable";
 import { Delete as DeleteIcon } from "@mui/icons-material";
 
-const SessionInfo = ({ sessionData, extendedResults }) => {
+const SessionInfo = ({ sessionData, extendedResults, handleDelete }) => {
   const theme = useTheme();
 
   return (
@@ -32,14 +32,14 @@ const SessionInfo = ({ sessionData, extendedResults }) => {
               })}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 500 }}>
-              Информация о сессии
+              Результаты эксперимента
             </Typography>
           </Stack>
 
           <IconButton
             edge="end"
             size="medium"
-            onClick={(e) => {}}
+            onClick={handleDelete}
             sx={{
               aspectRatio: 1,
             }}

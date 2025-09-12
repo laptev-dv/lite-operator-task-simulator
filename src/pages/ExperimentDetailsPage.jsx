@@ -7,6 +7,10 @@ import {
   Container,
   Tabs,
   Tab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import SessionInfo from "../components/sessionDetails/SessionInfo";
@@ -24,6 +28,7 @@ function ExperimentDetailsPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -33,15 +38,14 @@ function ExperimentDetailsPage() {
     try {
       setActionLoading(true);
       const response = await sessionApi.exportToPDF(id);
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `Сессия_${sessionData.id}.pdf`);
+      link.setAttribute("download", `Сессия_${sessionData.id}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-      
     } catch (error) {
       setError(error.message);
     } finally {
@@ -56,15 +60,36 @@ function ExperimentDetailsPage() {
   const handleDuplicateExperiment = async (newName) => {
     navigate("/experiment/create", {
       state: {
-        copiedExperiment: sessionData.experiment
+        copiedExperiment: sessionData.experiment,
       },
     });
   };
 
   const handleRepeatExperiment = () => {
     navigate(`/experiment/${sessionData.experiment.id}/run`, {
-      state: { experiment: sessionData.experiment }
+      state: { experiment: sessionData.experiment },
     });
+  };
+
+  const handleDelete = async () => {
+    try {
+      setActionLoading(true);
+      await sessionApi.delete(id);
+      setDeleteDialogOpen(false);
+      navigate("/library"); // Перенаправляем на главную страницу
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
   };
 
   useEffect(() => {
@@ -214,9 +239,10 @@ function ExperimentDetailsPage() {
           totalMisses: overallStats.totalMisses,
         }}
         extendedResults={extendedResults}
+        handleDelete={handleOpenDeleteDialog}
       />
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Настройки" />
           <Tab label="Результаты эксперимента" />
@@ -226,10 +252,8 @@ function ExperimentDetailsPage() {
       {activeTab === 0 && (
         <ExperimentParameters parameters={sessionData.experiment} />
       )}
-      
-      {activeTab === 1 && (
-        <SessionParameters sessionData={sessionData} />
-      )}
+
+      {activeTab === 1 && <SessionParameters sessionData={sessionData} />}
 
       <SessionActionsBar
         sessionData={sessionData}
@@ -239,6 +263,25 @@ function ExperimentDetailsPage() {
         onDuplicateExperiment={handleDuplicateExperiment}
         loading={actionLoading}
       />
+
+      {/* Диалог подтверждения удаления */}
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Удалить сессию?</DialogTitle>
+        <DialogContent>
+          <Alert severity="warning" sx={{ mt: 1 }}>
+            Вы уверены, что хотите удалить эту сессию? Это действие нельзя
+            отменить.
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} disabled={actionLoading}>
+            Отмена
+          </Button>
+          <Button onClick={handleDelete} color="error" disabled={actionLoading}>
+            {actionLoading ? <CircularProgress size={24} /> : "Удалить"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
