@@ -20,15 +20,39 @@ import {
   PictureAsPdf as PictureAsPdfIcon,
   ContentCopy as CopyIcon,
   PlayArrow as PlayArrowIcon,
+  ArrowDropDown as ArrowDropDownIcon,
 } from "@mui/icons-material";
 
 function SessionActionsBar({
+  sessionData,
   onExportPDF,
   onExportXLSX,
   onRepeatExperiment,
   onDuplicateExperiment,
   loading = false,
 }) {
+  const [exportAnchorEl, setExportAnchorEl] = useState(null);
+
+  const exportMenuOpen = Boolean(exportAnchorEl);
+
+  const handleExportMenuOpen = (event) => {
+    setExportAnchorEl(event.currentTarget);
+  };
+
+  const handleExportMenuClose = () => {
+    setExportAnchorEl(null);
+  };
+
+  const handleExportXLSXClick = () => {
+    onExportXLSX();
+    handleExportMenuClose();
+  };
+
+  const handleExportPDFClick = () => {
+    onExportPDF();
+    handleExportMenuClose();
+  };
+
   return (
     <>
       <AppBar
@@ -48,7 +72,6 @@ function SessionActionsBar({
             {/* Кнопка повтора эксперимента */}
             <Button
               variant="contained"
-              size="large"
               onClick={onRepeatExperiment}
               startIcon={<PlayArrowIcon />}
               sx={{ px: 4 }}
@@ -61,7 +84,6 @@ function SessionActionsBar({
             <Tooltip title="Создать копию эксперимента с текущими настройками">
               <Button
                 variant="outlined"
-                size="large"
                 onClick={onDuplicateExperiment}
                 startIcon={<CopyIcon />}
                 sx={{ px: 4 }}
@@ -71,28 +93,30 @@ function SessionActionsBar({
               </Button>
             </Tooltip>
 
-            {/* Кнопки экспорта */}
-            <Stack direction="row" spacing={1}>
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={onExportXLSX}
-                startIcon={<FileDownloadIcon />}
-                disabled={loading}
-              >
+            {/* Кнопка экспорта с выпадающим меню */}
+            <Button
+              variant="outlined"
+              onClick={handleExportMenuOpen}
+              startIcon={<FileDownloadIcon />}
+              disabled={loading}
+            >
+              Экспорт
+            </Button>
+            
+            <Menu
+              anchorEl={exportAnchorEl}
+              open={exportMenuOpen}
+              onClose={handleExportMenuClose}
+            >
+              <MenuItem onClick={handleExportXLSXClick}>
+                <FileDownloadIcon sx={{ mr: 1 }} />
                 XLSX
-              </Button>
-              
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={onExportPDF}
-                startIcon={<PictureAsPdfIcon />}
-                disabled={loading}
-              >
+              </MenuItem>
+              <MenuItem onClick={handleExportPDFClick}>
+                <PictureAsPdfIcon sx={{ mr: 1 }} />
                 PDF
-              </Button>
-            </Stack>
+              </MenuItem>
+            </Menu>
           </Stack>
         </Toolbar>
       </AppBar>

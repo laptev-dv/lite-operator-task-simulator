@@ -52,30 +52,33 @@ export const calculateDetailedStats = (results) => {
     const efficiency = totalPresentations > 0 ? stats.successCount / totalPresentations : 0;
     const avgResponseTime = totalPresentations > 0 ? stats.totalResponseTime / totalPresentations : 0;
     
-    const stimulusTime = taskResult.task.parameters?.stimulusTime || 0;
-    const responseTime = taskResult.task.parameters?.responseTime || 0;
+    const stimulusTime = taskResult.task.stimulusTime;
+    const responseTime = taskResult.task.responseTime;
     const totalTime = stimulusTime + responseTime;
     
-    const finalScore = totalTime > 0 ? efficiency * (1 - avgResponseTime / totalTime) : 0;
-    const rows = taskResult.task.parameters?.rows || 1;
-    const columns = taskResult.task.parameters?.columns || 1;
-    const workload = totalTime > 0 ? (rows * columns) / totalTime : 0;
+    const finalScore = efficiency * (1 - avgResponseTime / totalTime);
+    const rows = taskResult.task.rows;
+    const columns = taskResult.task.columns;
+    const workload = (rows * columns) / totalTime;
     
     let entropy = 0;
     if (efficiency > 0 && efficiency < 1) {
       entropy = -(efficiency * Math.log2(efficiency) + (1 - efficiency) * Math.log2(1 - efficiency));
     }
 
-    // Расчет длительности (сумма всех временных параметров презентаций)
     const totalDuration = taskResult.presentations.reduce((sum, p) => {
       return sum + (p.responseTime || 0);
     }, 0);
 
+    const disapperancesPerMinute = 1;
+    const perfomance = disapperancesPerMinute * (1 - entropy) * finalScore;
+
+    console.log(avgResponseTime);
+
     return {
       ...stats,
       finalScore,
-      entropy,
-      performance: efficiency * 100, // в процентах
+      perfomance,
       workload,
       avgResponseTime,
       efficiency,

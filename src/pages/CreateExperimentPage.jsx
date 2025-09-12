@@ -144,9 +144,9 @@ function CreateExperimentPage() {
       const response = await experimentApi.create(experimentData);
 
       if (response.data) {
-            navigate(`/experiment/${response.data.id}/run`, {
-              state: { experiment: response.data }
-            });
+        navigate(`/experiment/${response.data.id}/run`, {
+          state: { experiment: response.data }
+        });
       } else {
         throw new Error("Не удалось получить ID созданного эксперимента");
       }

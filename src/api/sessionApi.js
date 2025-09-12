@@ -30,7 +30,7 @@ export const sessionApi = {
             userAnswer: p.userAnswer,
             responseTime: p.responseTime || 0,
             timestamp: p.timestamp || new Date().toISOString()
-          }))
+          })),
         }))
 
       // Создаем новую сессию
@@ -81,22 +81,6 @@ export const sessionApi = {
     })
 
     return sessions;
-  },
-
-  // Получение сессий эксперимента
-  getByExperiment: async (experimentId, userId) => {
-    try {
-      const sessions = storage.findWhere(
-        STORAGE_KEYS.SESSIONS,
-        s => s.experiment === experimentId
-      );
-      
-      return {
-        data: sessions
-      };
-    } catch (error) {
-      throw error.response?.data || error;
-    }
   },
 
   // Получение сессии по ID

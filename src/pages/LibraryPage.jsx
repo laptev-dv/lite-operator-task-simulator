@@ -87,7 +87,7 @@ function LibraryPage() {
             alignItems="center"
           >
             <Typography variant="h6" sx={{ fontWeight: 500 }}>
-              Сессии
+              Эксперименты
             </Typography>
 
             <Button
@@ -114,7 +114,7 @@ function LibraryPage() {
                 disabled={loading}
               >
                 <MenuItem value="date">По дате</MenuItem>
-                <MenuItem value="name">По названию эксперимента</MenuItem>
+                <MenuItem value="name">По названию</MenuItem>
               </Select>
             </FormControl>
 

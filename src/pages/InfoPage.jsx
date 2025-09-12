@@ -9,16 +9,20 @@ import {
   Divider,
   Typography,
   useTheme,
+  Button,
 } from "@mui/material";
 import {
   Window as WindowsIcon,
   Description as ManualIcon,
+  Download as DownloadIcon,
+  OpenInNew as OpenInNewIcon,
 } from "@mui/icons-material";
 
 const InfoPage = () => {
   const theme = useTheme();
 
-  const handleDownloadDesktop = () => {
+  const handleDownloadDesktop = (e) => {
+    e.stopPropagation(); // Предотвращаем всплытие события
     // Создаем ссылку для скачивания файла из папки public
     const link = document.createElement('a');
     link.href = `${process.env.PUBLIC_URL}/old-version-app.zip`;
@@ -28,9 +32,19 @@ const InfoPage = () => {
     document.body.removeChild(link);
   };
 
-  const handleOpenReadme = () => {
+  const handleOpenReadme = (e) => {
+    e.stopPropagation(); // Предотвращаем всплытие события
     // Открываем README проекта в новой вкладке
     window.open('https://github.com/laptev-dv/lite-operator-task-simulator#readme', '_blank');
+  };
+
+  const handleItemClick = (handler) => {
+    return (e) => {
+      // Если клик был не по кнопке, вызываем обработчик
+      if (!e.target.closest('button')) {
+        handler(e);
+      }
+    };
   };
 
   return (
@@ -49,7 +63,7 @@ const InfoPage = () => {
                 backgroundColor: theme.palette.action.hover
               }
             }}
-            onClick={handleDownloadDesktop}
+            onClick={handleItemClick(handleDownloadDesktop)}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <WindowsIcon color="primary" />
@@ -58,8 +72,19 @@ const InfoPage = () => {
               primary="Версия для Windows"
               secondary="Оригинальное десктопное приложение"
             />
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<DownloadIcon />}
+              onClick={handleDownloadDesktop}
+              sx={{ ml: 2 }}
+            >
+              Скачать
+            </Button>
           </ListItem>
+          
           <Divider variant="inset" component="li" />
+          
           <ListItem 
             sx={{ 
               px: 3, 
@@ -68,7 +93,7 @@ const InfoPage = () => {
                 backgroundColor: theme.palette.action.hover
               }
             }}
-            onClick={handleOpenReadme}
+            onClick={handleItemClick(handleOpenReadme)}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <ManualIcon color="primary" />
@@ -77,6 +102,15 @@ const InfoPage = () => {
               primary="Руководство пользователя"
               secondary="Описание проекта"
             />
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<OpenInNewIcon />}
+              onClick={handleOpenReadme}
+              sx={{ ml: 2 }}
+            >
+              Открыть
+            </Button>
           </ListItem>
         </List>
       </Paper>

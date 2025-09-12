@@ -16,7 +16,7 @@ import SessionParameters from "../components/sessionDetails/SessionParameters";
 import ExperimentParameters from "../components/experimentDetails/ExperimentParameters";
 import { exportSessionToXLSX } from "../utils/exportSession";
 
-function SessionDetailPage() {
+function ExperimentDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [sessionData, setSessionData] = useState(null);
@@ -251,4 +251,4 @@ function formatDuration(milliseconds) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export default SessionDetailPage;
+export default ExperimentDetailsPage;

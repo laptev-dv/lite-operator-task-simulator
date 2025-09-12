@@ -5,7 +5,7 @@ import {
   Box,
   IconButton,
   Chip,
-  TextField
+  TextField,
 } from "@mui/material";
 import {
   NavigateBefore as PrevIcon,
@@ -13,44 +13,44 @@ import {
   CheckCircle as CorrectIcon,
   Cancel as IncorrectIcon,
   AccessTime as TimerIcon,
-  Help as MissedIcon
+  Help as MissedIcon,
 } from "@mui/icons-material";
-import { formatDuration } from '../../utils/dateFormatter'
+import { formatDuration } from "../../utils/dateFormatter";
 
 const PresentationNavigation = ({
   currentPresentation,
   currentIndex,
   totalPresentations,
   onPrev,
-  onNext
+  onNext,
 }) => {
-  const isCorrect = currentPresentation?.userAnswer?.row ===
-    currentPresentation?.correctAnswer?.row &&
+  const isCorrect =
+    currentPresentation?.userAnswer?.row ===
+      currentPresentation?.correctAnswer?.row &&
     currentPresentation?.userAnswer?.column ===
-    currentPresentation?.correctAnswer?.column;
+      currentPresentation?.correctAnswer?.column;
 
-  const answerStatus = !currentPresentation?.userAnswer 
-    ? { 
-        text: "Пропущен", 
-        color: "warning", 
-        icon: <MissedIcon fontSize="small" color="warning"/> 
-      } 
-    : isCorrect 
-      ? { 
-          text: "Правильно", 
-          color: "success", 
-          icon: <CorrectIcon fontSize="small" color="success"/> 
-        } 
-      : { 
-          text: "Ошибка", 
-          color: "error", 
-          icon: <IncorrectIcon fontSize="small" color="error"/> 
-        };
+  const answerStatus = !currentPresentation?.userAnswer
+    ? {
+        text: "Пропущен",
+        color: "warning",
+        icon: <MissedIcon fontSize="small" color="warning" />,
+      }
+    : isCorrect
+    ? {
+        text: "Правильно",
+        color: "success",
+        icon: <CorrectIcon fontSize="small" color="success" />,
+      }
+    : {
+        text: "Ошибка",
+        color: "error",
+        icon: <IncorrectIcon fontSize="small" color="error" />,
+      };
 
   return (
     <Stack spacing={2}>
-      {/* Первая строка - навигация, время и результат */}
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+      <Stack direction="row" alignItems="center" justifyContent="center" spacing={1} sx={{ mb: 1 }}>
         <IconButton onClick={onPrev} size="small" sx={{ mr: 1 }}>
           <PrevIcon />
         </IconButton>
@@ -62,40 +62,39 @@ const PresentationNavigation = ({
         <IconButton onClick={onNext} size="small" sx={{ ml: 1 }}>
           <NextIcon />
         </IconButton>
+      </Stack>
 
+      {/* Первая строка - навигация, время и результат */}
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
         <Box sx={{ flexGrow: 1 }} />
 
         <Chip
-        color={answerStatus.color}
+          color={answerStatus.color}
           icon={answerStatus.icon}
           label={
             <Box
-                component="span"
-                sx={{
-                  color:
-                    answerStatus.color === "success"
-                      ? "success"
-                      : answerStatus.color === "error"
-                      ? "error"
-                      : "warning",
-                }}
-              >
-                {answerStatus.text}
-              </Box>
+              component="span"
+              sx={{
+                color:
+                  answerStatus.color === "success"
+                    ? "success"
+                    : answerStatus.color === "error"
+                    ? "error"
+                    : "warning",
+              }}
+            >
+              {answerStatus.text}
+            </Box>
           }
           size="medium"
           variant="outlined"
-        />        
+        />
         <Chip
-        icon={<TimerIcon fontSize="small" />}
-        label={
-          <>
-            {`${formatDuration(currentPresentation.responseTime)}`}
-          </>
-        }
-        size="medium"
-        variant="outlined"
-      />
+          icon={<TimerIcon fontSize="small" />}
+          label={<>{`${formatDuration(currentPresentation.responseTime)}`}</>}
+          size="medium"
+          variant="outlined"
+        />
       </Stack>
 
       {/* Вторая строка - ответы */}

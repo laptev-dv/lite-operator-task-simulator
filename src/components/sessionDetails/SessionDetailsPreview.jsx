@@ -133,7 +133,6 @@ const SessionDetailsPreview = ({ parameters }) => {
       <Paper
         elevation={3}
         sx={{
-          p: 2,
           display: "flex",
           flexDirection: "column",
           height: "100%",
@@ -141,7 +140,7 @@ const SessionDetailsPreview = ({ parameters }) => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="h6" color="text.secondary" align="center">
           Нет данных для отображения
         </Typography>
       </Paper>

@@ -46,10 +46,10 @@ const SessionResultsTable = ({ results }) => {
                 {task.successCount} \ {task.errorCount} \ {task.missCount}  
               </TableCell>
               <TableCell align="center">{(task.efficiency * 100).toFixed(1)}%</TableCell>
-              <TableCell align="center">{formatDuration(task.avgResponseTime)}</TableCell>
+              <TableCell align="center">{task.avgResponseTime / 1000} c</TableCell>
               <TableCell align="center">{task.workload.toFixed(4)}</TableCell>
               <TableCell align="center">{(task.finalScore * 100).toFixed(1)}%</TableCell>
-              <TableCell align="center">{0}</TableCell>
+              <TableCell align="center">{task.perfomance.toFixed(4)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -5,7 +5,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import MainLayout from "./layouts/MainLayout";
 import ExperimentLayout from "./layouts/ExperimentLayout";
 import CreateExperimentPage from "./pages/CreateExperimentPage";
-import SessionDetailPage from "./pages/SessionDetailPage";
+import ExperimentDetailsPage from "./pages/ExperimentDetailsPage";
 import ExperimentRunPage from "./pages/ExperimentRunPage";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
 
           <Route path="experiment">
             <Route path="create" element={<CreateExperimentPage />} />
-            <Route path=":id" element={<SessionDetailPage />} />
+            <Route path=":id" element={<ExperimentDetailsPage />} />
           </Route>
           
           {/* Страница 404 с MainLayout */}
