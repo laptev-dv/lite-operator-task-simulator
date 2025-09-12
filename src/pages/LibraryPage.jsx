@@ -73,6 +73,17 @@ function LibraryPage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Paper elevation={2} sx={{ borderRadius: 2, overflow: "hidden", mb: 4 }}>
+        <Box
+          sx={{
+            p: 2,
+            backgroundColor: theme.palette.warning.light,
+            color: "#ffffff"
+          }}
+        >  
+          Нужны уточнения по подсчету результатов прохождения эксперимента
+        </Box>      
+      </Paper>
       <Paper elevation={2} sx={{ borderRadius: 2, overflow: "hidden" }}>
         {/* Шапка с заголовком и управлением */}
         <Box
